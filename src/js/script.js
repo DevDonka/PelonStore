@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Gattito': 1,
         'combinasionas': 1,
         'jobsahur': 1,
-        'tractoro': 2, // AÑADIDO: ID para el Tractoro Dinosauro
+        'tractoro': 1,
 
         // IDs del HTML de la sección de Packs Exclusivos (slider)
         'Beluga Beluga': 10,

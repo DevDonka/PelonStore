@@ -1006,3 +1006,88 @@ h1, h2, h3 {
     padding-top: 10px;
     border-top: 1px solid var(--border-color);
 }
+.pagination-controls {
+    /* 1. Contenedor Flexible y Centrado */
+    display: flex;
+    justify-content: center; /* Centra los botones y texto horizontalmente */
+    align-items: center; /* Centra los elementos verticalmente */
+    
+    /* 2. Espaciado y Margen */
+    gap: 30px; /* Espacio entre los elementos */
+    margin: 40px auto 60px auto; /* Margen superior/inferior para separarlo de la cuadrícula y el footer */
+    padding: 15px 20px;
+    border-top: 1px solid var(--border-color); /* Línea de separación sutil */
+}
+
+/* Estilo para los botones de paginación (clase .secondary-cta) */
+.pagination-controls .cta-button.secondary-cta {
+    /* Reajustando el estilo del botón CTA secundario para la paginación */
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 8px; /* Bordes suaves */
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    /* Uso de variables de tu tema */
+    background-color: var(--card-background); /* Fondo de tarjeta (claro en modo claro) */
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    box-shadow: 0 4px 12px var(--shadow-light);
+    transition: all 0.3s ease;
+}
+
+/* Efecto Hover en los botones */
+.pagination-controls .cta-button.secondary-cta:hover:not(:disabled) {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow-light); /* Más sombra en hover */
+    /* Nota: Usar solo var(--shadow-light) aquí es suficiente si quieres la misma sombra en ambos modos */
+}
+
+/* Estilo para botones deshabilitados (e.g., Anterior en la página 1) */
+.pagination-controls .cta-button.secondary-cta:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--background-light); /* Ligeramente diferente para indicar inactividad */
+    color: var(--text-color);
+    border-color: var(--border-color);
+    transform: none;
+    box-shadow: none;
+}
+
+/* Estilo para el texto de información de la página */
+#page-info {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--secondary-color); /* Destacado con el color secundario */
+    min-width: 140px;
+    text-align: center;
+    padding: 5px 10px;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    background-color: var(--card-background);
+    transition: all 0.3s ease;
+}
+
+/* 🌙 Ajustes para modo oscuro para la paginación */
+:root[data-theme="dark"] .pagination-controls .cta-button.secondary-cta {
+    border: 2px solid var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+:root[data-theme="dark"] .pagination-controls .cta-button.secondary-cta:hover:not(:disabled) {
+    background-color: var(--secondary-color);
+    color: var(--text-color); /* Usar el texto de color claro del modo oscuro */
+    border-color: var(--secondary-color);
+}
+
+:root[data-theme="dark"] #page-info {
+    color: var(--secondary-color);
+    border: 2px solid var(--secondary-color);
+    background-color: var(--card-background);
+}
+/* --- FIN ESTILOS DE PAGINACIÓN --- */
