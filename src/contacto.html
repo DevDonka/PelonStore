@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contacto | Pelón Store</title>
+    <meta name="description"
+        content="Encuentra nuestros enlaces directos de contacto: Discord, X (Twitter), Instagram y más." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/styles/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <style>
+        
+        body {
+            padding-top: 80px; 
+        }
+        .contact-hero {
+            padding-top: 0;
+            height: 40vh;
+        }
+        .link-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .contact-link-card {
+            background-color: var(--card-background);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .contact-link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-link-card a {
+            display: block;
+            text-decoration: none;
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            border-radius: 15px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .contact-link-card a i {
+            margin-right: 15px;
+            font-size: 1.8rem;
+        }
+
+        /* Colores específicos para hover de redes sociales */
+        .discord-link:hover { background-color: #7289da; color: white; }
+        .x-link:hover { background-color: #000000; color: white; }
+        .instagram-link:hover { background-color: #e1306c; color: white; }
+        .telegram-link:hover { background-color: #0088cc; color: white; }
+        .whatsapp-link:hover { background-color: #25d366; color: white; }
+        
+        main {
+            padding-top: 20px;
+            padding-bottom: 60px;
+        }
+        .navbar {
+            position: fixed;
+        }
+        .hero {
+            padding-top: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="preloader">
+        <div class="loader"></div>
+        <p>Cargando Pelón Store...</p>
+    </div>
+
+    <nav class="navbar fixed-navbar">
+        <div class="logo">
+            <img src="/src/assets/logo1.png" alt="Pelón Store Logo" />
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="index.html#brainrot">Packs Exclusivos</a>
+            <a href="index.html#paquetes">Brainrots</a>
+            <a href="contacto.html" style="color: var(--primary-color);">Contacto</a>
+        </div>
+        <div class="nav-utils">
+            <button id="theme-toggle" class="theme-button">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero contact-hero"> 
+        <div class="hero-content">
+            <h1 class="fade-in-up">¡Hablemos! 🤝</h1>
+            <p class="fade-in-up delay-200">Encuentra todos nuestros enlaces de contacto y soporte.</p>
+        </div>
+    </section>
+
+    <main class="container">
+        <h2 class="section-title reveal">🌐 Nuestros Enlaces Sociales, para soporte</h2>
+        
+        <div class="link-grid">
+
+            <div class="contact-link-card reveal active">
+                <a href="https://discord.com/invite/KjbQCNTPWd" target="_blank" class="discord-link">
+                    <i class="fab fa-discord"></i> Únete a nuestro Discord (Soporte Rápido)
+                </a>
+            </div>
+
+            <div class="contact-link-card reveal active" style="animation-delay: 0.2s;">
+                <a href="https://www.instagram.com/pelon.shop?igsh=ODYxaWcxZHhmY2hx&utm_source=qr" target="_blank" class="instagram-link">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+            </div>
+            
+            <div class="contact-link-card reveal active" style="animation-delay: 0.3s;">
+                <a href="https://w.app/lyfutv" target="_blank" class="whatsapp-link">
+                    <i class="fab fa-whatsapp"></i> Contacto Directo WhatsApp
+                </a>
+            </div>
+            
+            <div class="contact-link-card reveal active" style="animation-delay: 0.4s;">
+                <a href="mailto:pelonroblox4@gmail.com" target="_blank">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+            </div>
+
+        </div>
+        
+    </main>
+
+    <footer class="footer">
+        <div class="footer-section">
+            <h3><i class="fas fa-gem"></i> Pelón Store</h3>
+            <p>Entrega vía Discord · Soporte 24/7 · Seguridad garantizada</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-discord"></i> Discord</a>
+                <a href="#"><i class="fab fa-twitter"></i> X (Twitter)</a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 Pelón Store. Todos los derechos reservados. Este sitio no está afiliado con Roblox Corporation.
+        </div>
+    </footer>
+
+    <div id="image-modal" class="modal">
+        <span class="modal-close-btn">&times;</span>
+        <img class="modal-content" id="full-image" alt="Imagen Completa del Producto">
+        <div id="image-caption"></div>
+    </div>
+
+    <script src="/src/js/script.js"></script> 
+</body>
+
+</html>
