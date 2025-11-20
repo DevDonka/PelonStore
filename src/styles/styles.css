@@ -37,7 +37,7 @@ body {
     transition: background-color 0.4s ease, color 0.4s ease;
     min-height: 100vh;
     /* CORRECCIÓN DE ALINEACIÓN: Agrega padding-top para evitar que la navbar fija se superponga */
-    padding-top: 80px; 
+    padding-top: 80px;
 }
 
 h1, h2, h3 {
@@ -171,7 +171,7 @@ h1, h2, h3 {
 /* --- HERO SECTION (PARALLAX) --- */
 .hero {
     /* Eliminamos el padding-top redundante que choca con el padding del body */
-    padding-top: 0; 
+    padding-top: 0;
     text-align: center;
     background-size: cover;
     background-position: center;
@@ -182,11 +182,6 @@ h1, h2, h3 {
     align-items: center;
     justify-content: center;
     position: relative;
-}
-
-/* Imagen específica para el hero de la tienda */
-.store-hero {
-    background-image: url('https://placehold.co/1920x1080/1a1a1a/ffffff?text=PELON+STORE+HERO');
 }
 
 .hero::before {
@@ -568,7 +563,7 @@ h1, h2, h3 {
 }
 
 
-/* --- ESTILOS DEL SLIDER / CARRUSEL --- (Se mantienen los estilos) */
+/* --- ESTILOS DEL SLIDER / CARRUSEL --- */
 .slider-section {
     margin-bottom: 60px;
     position: relative;
@@ -679,36 +674,56 @@ h1, h2, h3 {
     transform: rotate(0deg) scale(1.05);
 }
 
+/* --- MEJORAS PARA LOS BOTONES DEL SLIDER / CARRUSEL --- */
 .slider-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    border: none;
+    /* Fondo más sólido y semi-transparente para mejor visibilidad */
+    background: var(--card-background); 
+    border: 2px solid var(--primary-color); /* Borde para destacarlo */
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    color: var(--text-color);
-    font-size: 1.2rem;
+    color: var(--primary-color); /* Ícono del mismo color primario */
+    font-size: 1.5rem; /* Ícono un poco más grande */
     cursor: pointer;
     z-index: 10;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    /* Sombra para darle profundidad */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+    display: flex; /* Asegura la alineación perfecta del ícono */
+    justify-content: center;
+    align-items: center;
 }
 
 :root[data-theme="dark"] .slider-btn {
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
+    /* Fondo invertido y más oscuro en modo oscuro */
+    background: var(--background-light); 
+    border: 2px solid var(--secondary-color); /* Borde secundario en modo oscuro */
+    color: var(--secondary-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .prev-btn { left: -60px; }
 .next-btn { right: -60px; }
 
 .slider-btn:hover {
-    background: var(--primary-color);
-    color: white;
+    /* Efecto de hover: invierte los colores, usa el color secundario y sube un poco */
+    background: var(--secondary-color);
+    color: var(--light-text); /* Texto blanco para mejor contraste */
+    border-color: var(--secondary-color);
+    transform: translateY(-50%) scale(1.1); /* Ligero aumento de tamaño y centrado */
+    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.5);
 }
+
+:root[data-theme="dark"] .slider-btn:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
+}
+/* --- FIN DE LAS MEJORAS DEL SLIDER --- */
 
 .carousel-nav {
     display: flex;
@@ -768,9 +783,9 @@ h1, h2, h3 {
 /* ------------------------------------------- */
 
 .modal {
-    display: none; 
+    display: none;
     position: fixed;
-    z-index: 2000; 
+    z-index: 2000;
     padding-top: 60px;
     left: 0;
     top: 0;
@@ -874,7 +889,7 @@ h1, h2, h3 {
     color: var(--text-color);
     opacity: 0.7;
     /* Sobrescribe el estilo de cierre general */
-    font-size: 30px; 
+    font-size: 30px;
 }
 
 .payment-close-btn:hover {
@@ -991,4 +1006,3 @@ h1, h2, h3 {
     padding-top: 10px;
     border-top: 1px solid var(--border-color);
 }
-

@@ -11,8 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
         'Sammini': 2,
         'Tralalero': 1,
         'Medussi': 5,
-        'Digitale': 20,
+        'Digitale': 1,
+        'beluga': 1,
         'Gattito': 1,
+        'combinasionas': 1,
+        'jobsahur': 1,
+        'tractoro': 2, // AÑADIDO: ID para el Tractoro Dinosauro
 
         // IDs del HTML de la sección de Packs Exclusivos (slider)
         'Beluga Beluga': 10,
@@ -68,9 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Lógica para obtener el productId de los elementos del Slider (donde no usamos data-product-id)
             if (!productId) {
                 const productName = buyButton?.getAttribute('data-product-name');
-                // Intentamos emparejar el nombre con una clave de stock
-                if (productName === 'Beluga Beluga') productId = 'Beluga Beluga';
-                if (productName === 'LA EXTINCT GRANDE') productId = 'LA EXTINCT GRANDE';
+                productId = productName; // Usamos el nombre como ID si no hay data-product-id
             }
 
             // Si la tarjeta no tiene un ID o el ID no está en el stock, salta
@@ -103,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (buyButton.tagName === 'A') { // Botones del Grid
                         buyButton.style.backgroundColor = '#7f8c8d'; // Gris
                         buyButton.style.pointerEvents = 'none';
+                        buyButton.setAttribute('href', '#'); // Asegura que no navegue
                     } else if (buyButton.tagName === 'BUTTON') { // Botones del Slider
                          buyButton.style.backgroundColor = '#7f8c8d';
                          buyButton.disabled = true;
@@ -141,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --------------------------------------------------
-    // NUEVO: Lógica del Modal de Pago
+    // MODIFICADO: Lógica del Modal de Pago
     // --------------------------------------------------
     const paymentModal = document.getElementById('payment-modal');
     const paymentCloseBtn = document.querySelector('.payment-close-btn');
@@ -154,13 +157,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function showPaymentModal(productName) {
         selectedProductNameDisplay.textContent = productName;
         paymentModal.style.display = 'block';
+        paymentModal.classList.add('visible'); // Añadir clase para la transición del fondo
         document.body.style.overflow = 'hidden'; // Bloquea el scroll de fondo
     }
 
     // Cierra el modal de pago
     function closePaymentModal() {
-        paymentModal.style.display = "none";
-        document.body.style.overflow = 'auto';
+        paymentModal.classList.remove('visible');
+        // Usamos un pequeño retraso para permitir la transición del fondo antes de ocultar
+        setTimeout(() => {
+            paymentModal.style.display = "none";
+            document.body.style.overflow = 'auto';
+        }, 300); 
     }
 
     // Cierra el modal al hacer clic en la X
@@ -170,14 +178,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Cierra el modal al hacer clic fuera de él
     window.addEventListener('click', function(event) {
-        if (event.target == paymentModal) {
+        if (event.target == paymentModal && paymentModal.classList.contains('visible')) {
             closePaymentModal();
         }
     });
 
     // Cierra el modal con la tecla Escape
     document.addEventListener('keydown', function(e) {
-        if (e.key === "Escape" && paymentModal.style.display === "block") {
+        if (e.key === "Escape" && paymentModal.classList.contains('visible')) {
             closePaymentModal();
         }
     });
@@ -185,38 +193,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Configuración de los botones de compra
     buyButtons.forEach(button => {
-        // Asegúrate de que el botón no esté en estado de "AGOTADO" antes de añadir el listener
+        // Obtenemos el nombre del producto, ya sea del atributo o del título de la tarjeta
+        let productName = button.getAttribute('data-product-name') || 'Producto Desconocido';
+        
+        if (productName === 'Producto Desconocido') {
+            const card = button.closest('.package-card');
+            if (card) {
+                const titleElement = card.querySelector('.package-details h3');
+                if (titleElement) {
+                    productName = titleElement.textContent.trim();
+                }
+            }
+        }
+
+        // Neutraliza el href (si es un <a>)
+        if (button.tagName === 'A') {
+            button.setAttribute('href', '#');
+            button.setAttribute('target', '_self');
+        }
+
+        // Sólo añade el evento si el botón no está marcado como agotado
         if (button.textContent !== 'AGOTADO' && !button.disabled) {
-
-            // Obtener el nombre del producto
-            let productName = 'Producto Desconocido';
-            if (button.hasAttribute('data-product-name')) {
-                productName = button.getAttribute('data-product-name');
-            } else {
-                 const card = button.closest('.package-card');
-                 if (card) {
-                     const titleElement = card.querySelector('.package-details h3');
-                     if (titleElement) {
-                         productName = titleElement.textContent.trim();
-                     }
-                 }
-            }
-
-            // Neutraliza el href (si es un <a>)
-            if (button.tagName === 'A') {
-                button.href = '#';
-                button.target = '_self';
-            }
-
             button.addEventListener('click', (e) => {
                 e.preventDefault(); // Detiene la navegación (si aplica)
                 showPaymentModal(productName);
             });
         }
     });
+    
+    // --------------------------------------------------
+    // AÑADIDO: Lógica del Lightbox (Zoom de Imagen)
+    // --------------------------------------------------
+    const imageModal = document.getElementById('image-modal');
+    const fullImage = document.getElementById('full-image');
+    const imageCaption = document.getElementById('image-caption');
+    const imageCloseBtn = imageModal.querySelector('.modal-close-btn');
+    const zoomableImages = document.querySelectorAll('.zoomable-img');
 
+    function closeImageModal() {
+        imageModal.classList.remove('visible');
+        imageModal.style.display = "none";
+        document.body.style.overflow = 'auto';
+    }
 
-    // --- 3. Lógica del Slider (Carrusel de Brainrots) ---
+    imageCloseBtn.onclick = closeImageModal;
+    
+    // Cierra la imagen al hacer clic fuera
+    window.addEventListener('click', function(event) {
+        if (event.target == imageModal && imageModal.style.display === "block") {
+            closeImageModal();
+        }
+    });
+
+    zoomableImages.forEach(img => {
+        img.addEventListener('click', () => {
+            fullImage.src = img.src;
+            imageCaption.textContent = img.dataset.caption || img.alt;
+            imageModal.style.display = "block";
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    // --------------------------------------------------
+    // MODIFICADO: Lógica del Slider (Carrusel)
+    // SOLO APLICA A LA PÁGINA 'index.html'
+    // --------------------------------------------------
     const track = document.querySelector('.carousel-track');
     // Verificamos si el carrusel existe en la página
     if (track) {
@@ -290,14 +331,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Mueve la pista al slide actual después de redimensionar
                 const currentSlide = track.querySelector('.current-slide');
                 if (currentSlide) {
-                     track.style.transform = 'translateX(-' + currentSlide.style.left + ')';
+                    track.style.transform = 'translateX(-' + currentSlide.style.left + ')';
                 }
             });
         }
     }
 
 
-    // --- 4. Funcionalidad de Revelación al Scroll ---
+    // --- 3. Funcionalidad de Revelación al Scroll ---
     const revealElements = document.querySelectorAll('.reveal');
 
     const revealOnScroll = () => {
@@ -305,53 +346,67 @@ document.addEventListener('DOMContentLoaded', () => {
         const revealPoint = 150;
 
         revealElements.forEach(element => {
-            const revealTop = element.getBoundingClientRect().top;
-
-            if (revealTop < windowHeight - revealPoint) {
+            const rect = element.getBoundingClientRect();
+            if (rect.top < windowHeight - revealPoint) {
                 element.classList.add('active');
             }
         });
     };
 
     window.addEventListener('scroll', revealOnScroll);
-    revealOnScroll(); // Ejecutar al cargar la página
+    window.addEventListener('load', revealOnScroll); // Para revelar elementos al cargar
 
-    // --- 5. Lógica del Modal (Lightbox) para Zoom de Imagen ---
-    const modal = document.getElementById('image-modal');
-    const modalImg = document.getElementById('full-image');
-    const captionText = document.getElementById('image-caption');
-    // El botón de cierre de la imagen usa la clase .modal-close-btn
-    const closeBtn = document.querySelector('#image-modal .modal-close-btn'); 
-    const zoomableImages = document.querySelectorAll('.zoomable-img');
 
-    function closeModal() {
-        modal.style.display = "none";
-        document.body.style.overflow = 'auto';
-    }
+    // --------------------------------------------------
+    // AÑADIDO: 📊 Lógica de Paginación (Solo para brainrots.html)
+    // --------------------------------------------------
+    const brainrotGrid = document.getElementById('brainrot-grid');
+    if (brainrotGrid) {
+        const items = Array.from(brainrotGrid.children);
+        const itemsPerPage = 6; // Cantidad de productos por página
+        let currentPage = 1;
+        
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const pageInfoSpan = document.getElementById('page-info');
 
-    zoomableImages.forEach(img => {
-        img.addEventListener('click', function() {
-            modal.style.display = "block";
-            modalImg.src = this.src;
-            captionText.innerHTML = this.getAttribute('data-caption') || this.alt;
-            document.body.style.overflow = 'hidden';
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+
+        function displayPage(page) {
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+
+            items.forEach((item, index) => {
+                item.style.display = (index >= startIndex && index < endIndex) ? 'block' : 'none';
+            });
+
+            // Actualizar botones y texto
+            prevPageBtn.disabled = page === 1;
+            nextPageBtn.disabled = page === totalPages;
+            pageInfoSpan.textContent = `Página ${page} de ${totalPages}`;
+            
+            // Subir al inicio del grid después de la paginación
+            brainrotGrid.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayPage(currentPage);
+            }
         });
-    });
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeModal);
+        nextPageBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayPage(currentPage);
+            }
+        });
+
+        // Inicializar la paginación si hay productos
+        if (items.length > 0) {
+            displayPage(currentPage);
+        }
     }
-
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === "Escape" && modal.style.display === "block") {
-            closeModal();
-        }
-    });
-
-}); // Cierre de DOMContentLoaded
+    
+});
