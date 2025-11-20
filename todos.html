@@ -24,11 +24,9 @@
         <div class="logo">
             <img src="/src/assets/logo1.png" alt="Pelón Store Logo" />
         </div>
-        <div class="nav-links">
-           <a href="index.html">Inicio</a>
+        <div class="nav-links" id="nav-links"> <a href="index.html">Inicio</a>
             <a href="#brainrot">Packs Exclusivos</a>
             <a href="#paquetes">Brainrots</a>
-            <a href="todos.html">Todos los Brainrots</a>
             <a href="contacto.html">Contacto</a>
         </div>
         <div class="nav-utils">
@@ -39,6 +37,8 @@
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count">0</span>
             </div>
+            <button class="nav-toggle" id="nav-toggle"> <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
     <section class="hero store-hero parallax-hero" 
@@ -56,7 +56,7 @@
         <section class="packages">
             <div class="package-grid" id="brainrot-grid">
                 
-<div class="package-card product-card reveal" data-product-id="Hotspotsito">
+                <div class="package-card product-card reveal" data-product-id="Hotspotsito">
                     <div class="package-tag basic-tag">SECRETS</div>
                     <div class="package-img">
                         <img class="zoomable-img" src="/src/assets/hotposito.png" alt="Secrest" data-caption="Secrest" />
@@ -70,7 +70,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte 24/7</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/2HqYGRC" data-product-name="Los Hotspotsitos">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Los Hotspotsitos" 
+                                    data-price="9000" 
+                                    data-img-src="/src/assets/hotposito.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Los Hotspotsitos" 
+                                    data-price="9000">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -83,12 +95,54 @@
                     <div class="package-details">
                         <h3>Sammyni Spyderini</h3>
                         <div class="package-price">$1.200 ARS</div>
-                        <div class="stock">Stock disponible: 2 Unidad</div>
+                        <div class="stock">Stock disponible: 1 Unidad</div>
                         <div class="features">
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte 24/7</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/1maJM2T" data-product-name="Sammyni Spyderini">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Sammyni Spyderini" 
+                                    data-price="1200" 
+                                    data-img-src="/src/assets/Araña.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Sammyni Spyderini" 
+                                    data-price="1200">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="package-card product-card reveal" data-product-id="Sammini2">
+                    <div class="package-tag standard-tag">Gold, Secret</div>
+                    <div class="package-img">
+                        <img class="zoomable-img" src="/src/assets/Araña2.png" alt="Paquete Pro" data-caption="Secrest" />
+                        <div class="robux-amount">SAMMYNI SPYDERINI</div>
+                    </div>
+                    <div class="package-details">
+                        <h3>Sammyni Spyderini</h3>
+                        <div class="package-price">$2.600 ARS</div>
+                        <div class="stock">Stock disponible: 1 Unidad</div>
+                        <div class="features">
+                            <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
+                            <div class="feature"><i class="fas fa-check-circle"></i> Soporte 24/7</div>
+                        </div>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Sammyni Spyderini" 
+                                    data-price="2600" 
+                                    data-img-src="/src/assets/Araña2.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Sammyni Spyderini" 
+                                    data-price="2600">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -107,7 +161,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> ¡Doble Seguridad!</div>
                         </div>
-                        <a class="buy-button featured-button" href="https://mpago.li/1BgHNf1" data-product-name="Extintc Tralalero">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn featured-button" 
+                                    data-product-name="Extintc Tralalero (3.5K)" 
+                                    data-price="3500" 
+                                    data-img-src="/src/assets/talalero1.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn featured-button" 
+                                    data-product-name="Extintc Tralalero (3.5K)" 
+                                    data-price="3500">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -126,7 +192,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> ¡Doble Seguridad!</div>
                         </div>
-                        <a class="buy-button featured-button" href="https://mpago.li/1BgHNf1" data-product-name="Extintc Tralalero">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn featured-button" 
+                                    data-product-name="Extintc Tralalero (7K)" 
+                                    data-price="7000" 
+                                    data-img-src="/src/assets/Tralalero2.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn featured-button" 
+                                    data-product-name="Extintc Tralalero (7K)" 
+                                    data-price="7000">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -144,11 +222,23 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte prioritario</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/2szKHXL" data-product-name="Graipuss Medussi">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Graipuss Medussi (4K)" 
+                                    data-price="4000" 
+                                    data-img-src="/src/assets/medusa.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Graipuss Medussi (4K)" 
+                                    data-price="4000">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                                <div class="package-card product-card reveal" data-product-id="Medussi">
+                <div class="package-card product-card reveal" data-product-id="Medussi">
                     <div class="package-tag pro-tag">Secret</div>
                     <div class="package-img">
                         <img class="zoomable-img" src="/src/assets/medusa2.png" alt="Paquete Gyakyo" data-caption="Secrest" />
@@ -162,7 +252,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte prioritario</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/2szKHXL" data-product-name="Graipuss Medussi">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Graipuss Medussi (1K)" 
+                                    data-price="1000" 
+                                    data-img-src="/src/assets/medusa2.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Graipuss Medussi (1K)" 
+                                    data-price="1000">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -180,7 +282,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte VIP</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/1qyJ4kH" data-product-name="Guerrero Digitale">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Guerrero Digitale" 
+                                    data-price="3500" 
+                                    data-img-src="/src/assets/teclado.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Guerrero Digitale" 
+                                    data-price="3500">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -198,7 +312,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte VIP</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/1qyJ4kH" data-product-name="Los Combinasionas">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Los Combinasionas (6K)" 
+                                    data-price="6000" 
+                                    data-img-src="/src/assets/Combinasionas.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Los Combinasionas (6K)" 
+                                    data-price="6000">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -216,7 +342,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte VIP</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/1qyJ4kH" data-product-name="Los Combinasionas">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Los Combinasionas (4K)" 
+                                    data-price="4000" 
+                                    data-img-src="/src/assets/Combinasionas2.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Los Combinasionas (4K)" 
+                                    data-price="4000">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -234,7 +372,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte VIP</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/1qyJ4kH" data-product-name="Job Jobs Sahur">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Job Job Sahur" 
+                                    data-price="3500" 
+                                    data-img-src="/src/assets/jobsahur.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Job Job Sahur" 
+                                    data-price="3500">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -252,7 +402,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte VIP</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/1qyJ4kH" data-product-name="Tractoro Dinosauro">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Tractoro Dinosauro (2.5K)" 
+                                    data-price="2500" 
+                                    data-img-src="/src/assets/tractoro.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Tractoro Dinosauro (2.5K)" 
+                                    data-price="2500">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -270,7 +432,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte VIP</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/1qyJ4kH" data-product-name="Tractoro Dinosauro">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Tractoro Dinosauro (3.5K)" 
+                                    data-price="3500" 
+                                    data-img-src="/src/assets/tractoro2.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Tractoro Dinosauro (3.5K)" 
+                                    data-price="3500">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
             
@@ -288,7 +462,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte Premium</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/2hUqqYA" data-product-name="Gattito Tocoto">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Gattito Tocoto" 
+                                    data-price="2500" 
+                                    data-img-src="/src/assets/gatito.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Gattito Tocoto" 
+                                    data-price="2500">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -306,7 +492,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte Premium</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/2hUqqYA" data-product-name="Beluga">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Beluga Beluga" 
+                                    data-price="2000" 
+                                    data-img-src="/src/assets/beluga.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Beluga Beluga" 
+                                    data-price="2000">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="package-card product-card reveal" data-product-id="beluga">
@@ -323,7 +521,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte Premium</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/2hUqqYA" data-product-name="Las Vaquitas Saturnitas">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Las Vaquitas Saturnitas (5.6K)" 
+                                    data-price="5600" 
+                                    data-img-src="/src/assets/vacasgalaxy.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Las Vaquitas Saturnitas (5.6K)" 
+                                    data-price="5600">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -341,7 +551,19 @@
                             <div class="feature"><i class="fas fa-check-circle"></i> Entrega por Discord</div>
                             <div class="feature"><i class="fas fa-check-circle"></i> Soporte Premium</div>
                         </div>
-                        <a class="buy-button" href="https://mpago.li/2hUqqYA" data-product-name="Crabbo Limonetta">COMPRAR AHORA</a>
+                        <div class="product-buttons">
+                            <button class="add-to-cart-btn" 
+                                    data-product-name="Crabbo Limonetta" 
+                                    data-price="3500" 
+                                    data-img-src="/src/assets/limonetta.png">
+                                <i class="fas fa-cart-plus"></i> AGREGAR
+                            </button>
+                            <button class="buy-now-btn" 
+                                    data-product-name="Crabbo Limonetta" 
+                                    data-price="3500">
+                                <i class="fas fa-money-bill-wave"></i> COMPRAR
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -361,6 +583,37 @@
 
     </main>
 
+    <div id="cart-modal" class="modal">
+        <div class="modal-content cart-content">
+            <span class="modal-close-btn cart-close-btn">&times;</span>
+            <div class="payment-header">
+                <i class="fas fa-shopping-basket"></i>
+                <h2>Tu Carrito de Brainrots</h2>
+            </div>
+            
+            <div id="cart-items-container" class="cart-items-container">
+                <p id="empty-cart-message" style="text-align: center; padding: 20px; color: var(--text-color-secondary);">
+                    Tu carrito está vacío. ¡Añade algunos Brainrots!
+                </p>
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-line">
+                    <span>Subtotal:</span>
+                    <strong id="cart-subtotal">$0 ARS</strong>
+                </div>
+                <div class="summary-line total-line">
+                    <span>Total a Pagar:</span>
+                    <strong id="cart-total">$0 ARS</strong>
+                </div>
+            </div>
+
+            <button id="checkout-button" class="cta-button pulse-effect" disabled>
+                <i class="fas fa-check-circle"></i> CONTINUAR AL PAGO ÚNICO
+            </button>
+            <p class="small-text-note">Al continuar, aceptas la compra de **todos** los artículos listados.</p>
+        </div>
+    </div>
     <div id="payment-modal" class="modal">
         <div class="modal-content payment-content">
             <span class="modal-close-btn payment-close-btn">&times;</span>

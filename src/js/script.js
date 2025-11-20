@@ -1,412 +1,572 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     const root = document.documentElement;
+    const cartKey = 'cart'; 
+    let cart = JSON.parse(localStorage.getItem(cartKey)) || []; 
+    const cartCountSpan = document.querySelector('.cart-count');
 
-    // --------------------------------------------------
-    // MODIFICADO: 💡 BASE DE DATOS DE STOCK
-    // --------------------------------------------------
-    const productStock = {
-        // IDs del HTML de la sección de Brainrots (paquetes)
-        'Hotspotsito': 7,
-        'Sammini': 2,
-        'Tralalero': 1,
-        'Medussi': 5,
-        'Digitale': 1,
-        'beluga': 1,
-        'Gattito': 1,
-        'combinasionas': 1,
-        'jobsahur': 1,
-        'tractoro': 1,
+    const cartModal = document.getElementById('cart-modal');
+    const cartCloseBtn = document.querySelector('.cart-close-btn');
+    const paymentModal = document.getElementById('payment-modal');
+    const cartItemsContainer = document.getElementById('cart-items-container');
+    const emptyCartMessage = document.getElementById('empty-cart-message');
+    const cartSubtotalSpan = document.getElementById('cart-subtotal');
+    const cartTotalSpan = document.getElementById('cart-total');
+    const checkoutButton = document.getElementById('checkout-button');
 
-        // IDs del HTML de la sección de Packs Exclusivos (slider)
-        'Beluga Beluga': 10,
-        'LA EXTINCT GRANDE': 0 // AGOTADO (Para probar la lógica)
+    const formatPrice = (price) => {
+        return `$${price.toLocaleString('es-AR', { minimumFractionDigits: 0 })} ARS`;
     };
 
-    // --- 1. Control del Modo Claro/Oscuro ---
+    const updateCartCount = () => {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountSpan.textContent = totalItems;
+        cartCountSpan.style.display = totalItems > 0 ? 'flex' : 'none';
+        
+        if (checkoutButton) {
+            checkoutButton.disabled = totalItems === 0;
+        }
+        
+        if (emptyCartMessage) {
+            emptyCartMessage.style.display = totalItems === 0 ? 'block' : 'none';
+        }
+
+    };
+
+    const calculateCartTotals = () => {
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const total = subtotal; 
+
+        if (cartSubtotalSpan) cartSubtotalSpan.textContent = formatPrice(subtotal);
+        if (cartTotalSpan) cartTotalSpan.textContent = formatPrice(total);
+    };
+
+    const renderCartItems = () => {
+        if (!cartItemsContainer) return;
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '';
+        } else {
+            cartItemsContainer.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="item-details">
+                        <h3>${item.name}</h3>
+                        <p class="item-price-single">${formatPrice(item.price)} c/u</p>
+                    </div>
+                    <div class="item-quantity-control">
+                        <button class="minus-btn" data-id="${item.id}">-</button>
+                        <span class="item-quantity">${item.quantity}</span>
+                        <button class="plus-btn" data-id="${item.id}">+</button>
+                    </div>
+                    <span class="item-total">${formatPrice(item.price * item.quantity)}</span>
+                    <button class="remove-item-btn" data-id="${item.id}">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+        updateCartCount();
+        calculateCartTotals();
+    };
+
+
+    const updateItemQuantity = (productId, change) => {
+        const item = cart.find(item => item.id === productId);
+        const maxStock = productStock[productId] || 0;
+
+        if (item) {
+            if (change > 0 && item.quantity >= maxStock) {
+                alert(`¡Stock limitado! No puedes añadir más de ${item.name} (${maxStock} unidades).`);
+                return;
+            }
+
+            item.quantity += change;
+
+            if (item.quantity <= 0) {
+                 removeItemFromCart(productId);
+            } else {
+                localStorage.setItem(cartKey, JSON.stringify(cart));
+                updateCartCount();
+                calculateCartTotals();
+                renderCartItems();
+            }
+        }
+    };
+
+    const removeItemFromCart = (productId) => {
+        const itemIndex = cart.findIndex(item => item.id === productId);
+
+        if (itemIndex > -1) {
+            cart.splice(itemIndex, 1); 
+            localStorage.setItem(cartKey, JSON.stringify(cart));
+            updateCartCount();
+            calculateCartTotals();
+            renderCartItems(); 
+        }
+    };
+
+    const addToCart = (product, showAlert = true) => { 
+        const existingItem = cart.find(item => item.id === product.id);
+        const maxStock = productStock[product.id] || 0;
+        const currentInCart = existingItem ? existingItem.quantity : 0;
+
+        if (currentInCart >= maxStock) {
+            alert(`¡Stock limitado! Ya tienes ${currentInCart} unidad(es) de ${product.name} en el carrito y el stock disponible es ${maxStock}.`);
+            return;
+        }
+
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+
+        localStorage.setItem(cartKey, JSON.stringify(cart));
+        updateCartCount();
+        
+        if (showAlert) { 
+            alert(`${product.name} ha sido añadido al carrito.`);
+        }
+    };
+
+    
+    const setupCartListeners = () => {
+        if (cartItemsContainer) {
+            cartItemsContainer.addEventListener('click', (e) => {
+                const target = e.target.closest('button');
+
+                if (!target) return; 
+
+                const productId = target.dataset.id;
+                if (!productId) return; 
+                
+                const maxStock = productStock[productId] || 0;
+                const item = cart.find(item => item.id === productId);
+
+
+                if (target.classList.contains('remove-item-btn')) {
+                    if (confirm('¿Estás seguro de que quieres eliminar este artículo del carrito?')) {
+                        removeItemFromCart(productId);
+                    }
+                } 
+                
+                else if (target.classList.contains('minus-btn')) {
+                    updateItemQuantity(productId, -1);
+                }
+                
+                else if (target.classList.contains('plus-btn')) {
+                    if (item && item.quantity < maxStock) {
+                        updateItemQuantity(productId, 1);
+                    } else if (item) {
+                        alert(`¡Stock limitado! No puedes añadir más de ${item.name} (${maxStock} unidades).`);
+                    }
+                }
+            });
+        }
+        
+        if (checkoutButton) {
+            checkoutButton.addEventListener('click', () => {
+                if (cart.length > 0 && paymentModal) {
+                    
+                    const selectedProductNameElement = document.getElementById('selected-product-name');
+                    if (selectedProductNameElement) {
+                        const productSummary = cart.map(item => 
+                            `${item.name} (x${item.quantity})`
+                        ).join('<br>'); 
+
+                        const totalPagar = cartTotalSpan.textContent;
+                        selectedProductNameElement.innerHTML = `
+                            <p>Total a Pagar: <strong>${totalPagar}</strong></p>
+                            <p>Artículos:</p>
+                            <div style="font-size: 0.9em; padding-left: 15px;">${productSummary}</div>
+                        `;
+                    }
+                    
+                    cartModal.style.display = 'none'; 
+                    paymentModal.style.display = 'block'; 
+                } else {
+                    alert('Tu carrito está vacío.');
+                }
+            });
+        }
+        
+        const cartIcon = document.querySelector('.cart-icon');
+        if (cartIcon && cartModal) {
+            cartIcon.addEventListener('click', () => {
+                renderCartItems(); 
+                cartModal.style.display = 'block';
+            });
+        }
+        
+        if (cartCloseBtn && cartModal) {
+            cartCloseBtn.addEventListener('click', () => {
+                cartModal.style.display = 'none';
+            });
+        }
+        
+        const paymentCloseBtn = document.querySelector('.payment-close-btn');
+        if (paymentCloseBtn && paymentModal) {
+            paymentCloseBtn.addEventListener('click', () => {
+                paymentModal.style.display = 'none';
+            });
+        }
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === cartModal) {
+                cartModal.style.display = 'none';
+            }
+            if (e.target === paymentModal) {
+                paymentModal.style.display = 'none';
+            }
+        });
+    };
+
+    const productStock = {
+        'Vaquitas-Saturnitas-5500': 10,
+        'Extinct-Grande-7000': 1, 
+        'Extinct-Grande-12000': 2, 
+
+        'Hotspotsito': 7,
+        'Sammini': 1,
+        'Sammini2': 1,
+        'Tralalero-3500': 1, 
+        'Tralalero-1500': 1, 
+        'Medussi-4000': 1, 
+        'Medussi-1000': 1, 
+        'Digitale-3500': 1, 
+        'Combinasionas-6000': 1, 
+        'Combinasionas-5000': 2, 
+        'JobSahur-3500': 1, 
+        'Vacca-Saturno-1000': 1, 
+        'Vacca-Saturno-3000': 1, 
+        'Tractoro-Dinosauro-3500': 1, 
+        'Tractoro-Dinosauro-2500': 1, 
+        'Gattito-Tocoto-2500': 1, 
+        'Beluga-2000': 1, 
+        'Vaquitas-Saturnitas-5500-G': 1, 
+    };
+
     const themeToggle = document.getElementById('theme-toggle');
     const currentTheme = localStorage.getItem('theme') || 'light';
-
+    
     function setTheme(theme) {
         root.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
-
         if (theme === 'dark') {
             themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
         } else {
             themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
         }
     }
+    
+    setTheme(currentTheme); 
+    
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const newTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+    }
 
-    setTheme(currentTheme);
-
-    themeToggle.addEventListener('click', () => {
-        const newTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        setTheme(newTheme);
-    });
-
-
-    // --- 2. Preloader ---
     const preloader = document.getElementById('preloader');
-
-    setTimeout(() => {
-        if (preloader) {
-            preloader.classList.add('hidden');
-        }
-    }, 500);
-
-
-    // --------------------------------------------------
-    // MODIFICADO: 💰 FUNCIÓN DE ACTUALIZACIÓN DE STOCK
-    // --------------------------------------------------
-    function updateStockDisplay() {
-        // Seleccionamos tanto tarjetas de grid (.package-card) como slides del carrusel (.carousel-slide)
-        const allProductCards = document.querySelectorAll('.package-card, .carousel-slide');
-
-        allProductCards.forEach(card => {
-            // El ID del producto se lee de data-product-id (para grid) o se infiere del nombre (para slider)
-            let productId = card.dataset.productId;
-            const buyButton = card.querySelector('.buy-button');
-            const stockContainer = card.querySelector('.stock'); // Contenedor del stock para cards del grid
-
-            // Lógica para obtener el productId de los elementos del Slider (donde no usamos data-product-id)
-            if (!productId) {
-                const productName = buyButton?.getAttribute('data-product-name');
-                productId = productName; // Usamos el nombre como ID si no hay data-product-id
-            }
-
-            // Si la tarjeta no tiene un ID o el ID no está en el stock, salta
-            if (!productId || typeof productStock[productId] === 'undefined') {
-                return;
-            }
-
-            const currentStock = productStock[productId];
-            const stockEl = card.querySelector('.stock-count');
-
-
-            // 1. Actualizar el texto del stock (Solo aplica al grid)
-            if (stockEl) {
-                stockEl.textContent = currentStock;
-            }
-
-            // 2. Comprobar si está agotado (Aplica a grid y slider)
-            if (currentStock === 0) {
-                // Estilo para AGOTADO
-                if (stockEl) {
-                    stockEl.style.color = '#e74c3c';
-                }
-                if (stockContainer) {
-                    stockContainer.innerHTML = '<i class="fas fa-times-circle" style="color: #e74c3c;"></i> Agotado';
-                }
-
-                if (buyButton) {
-                    buyButton.textContent = 'AGOTADO';
-
-                    if (buyButton.tagName === 'A') { // Botones del Grid
-                        buyButton.style.backgroundColor = '#7f8c8d'; // Gris
-                        buyButton.style.pointerEvents = 'none';
-                        buyButton.setAttribute('href', '#'); // Asegura que no navegue
-                    } else if (buyButton.tagName === 'BUTTON') { // Botones del Slider
-                         buyButton.style.backgroundColor = '#7f8c8d';
-                         buyButton.disabled = true;
-                    }
-                }
-            } else if (currentStock <= 5) {
-                // Advertencia de bajo stock (Solo aplica al grid)
-                if (stockEl) {
-                    stockEl.style.color = '#f39c12';
-                }
-
-            } else {
-                // Stock normal (Solo aplica al grid)
-                if (stockEl) {
-                    stockEl.style.color = '#2ecc71';
-                }
-
-                // Restablecer estilos
-                if (buyButton) {
-                    if (buyButton.tagName === 'A') {
-                        buyButton.textContent = 'COMPRAR AHORA';
-                        buyButton.style.backgroundColor = '';
-                        buyButton.style.pointerEvents = 'auto';
-                    } else if (buyButton.tagName === 'BUTTON') {
-                        buyButton.textContent = 'COMPRAR AHORA';
-                        buyButton.style.backgroundColor = '';
-                        buyButton.disabled = false;
-                    }
-                }
-            }
-        });
-    }
-
-    // Llamar a la función de stock al cargar la página
-    updateStockDisplay();
-
-
-    // --------------------------------------------------
-    // MODIFICADO: Lógica del Modal de Pago
-    // --------------------------------------------------
-    const paymentModal = document.getElementById('payment-modal');
-    const paymentCloseBtn = document.querySelector('.payment-close-btn');
-    const selectedProductNameDisplay = document.getElementById('selected-product-name');
-
-    // Selecciona todos los botones de compra (del slider y del grid)
-    const buyButtons = document.querySelectorAll('.buy-button');
-
-    // Muestra el modal de pago
-    function showPaymentModal(productName) {
-        selectedProductNameDisplay.textContent = productName;
-        paymentModal.style.display = 'block';
-        paymentModal.classList.add('visible'); // Añadir clase para la transición del fondo
-        document.body.style.overflow = 'hidden'; // Bloquea el scroll de fondo
-    }
-
-    // Cierra el modal de pago
-    function closePaymentModal() {
-        paymentModal.classList.remove('visible');
-        // Usamos un pequeño retraso para permitir la transición del fondo antes de ocultar
+    if (preloader) {
         setTimeout(() => {
-            paymentModal.style.display = "none";
-            document.body.style.overflow = 'auto';
-        }, 300); 
+            preloader.classList.add('hidden');
+        }, 1000); 
     }
 
-    // Cierra el modal al hacer clic en la X
-    if (paymentCloseBtn) {
-        paymentCloseBtn.onclick = closePaymentModal;
-    }
+    const initializeStore = () => {
+        document.querySelectorAll('.package-card, .carousel-slide').forEach(element => {
+            const id = element.dataset.productId; 
+            
+            if (!id || productStock[id] === undefined) return; 
 
-    // Cierra el modal al hacer clic fuera de él
-    window.addEventListener('click', function(event) {
-        if (event.target == paymentModal && paymentModal.classList.contains('visible')) {
-            closePaymentModal();
-        }
-    });
+            const stock = productStock[id];
+            const isPackageCard = element.classList.contains('package-card');
 
-    // Cierra el modal con la tecla Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === "Escape" && paymentModal.classList.contains('visible')) {
-            closePaymentModal();
-        }
-    });
-
-
-    // Configuración de los botones de compra
-    buyButtons.forEach(button => {
-        // Obtenemos el nombre del producto, ya sea del atributo o del título de la tarjeta
-        let productName = button.getAttribute('data-product-name') || 'Producto Desconocido';
-        
-        if (productName === 'Producto Desconocido') {
-            const card = button.closest('.package-card');
-            if (card) {
-                const titleElement = card.querySelector('.package-details h3');
-                if (titleElement) {
-                    productName = titleElement.textContent.trim();
+            if (isPackageCard) {
+                const stockElement = element.querySelector('.package-details .stock');
+                if (stockElement) {
+                    stockElement.textContent = `Stock disponible: ${stock} unidad${stock !== 1 ? 'es' : ''}`;
+                    if (stock === 0) {
+                        stockElement.classList.add('out-of-stock');
+                    } else if (stock <= 3 && stock > 0) { 
+                        stockElement.classList.add('low-stock');
+                    } else {
+                        stockElement.classList.remove('out-of-stock', 'low-stock');
+                    }
                 }
             }
-        }
-
-        // Neutraliza el href (si es un <a>)
-        if (button.tagName === 'A') {
-            button.setAttribute('href', '#');
-            button.setAttribute('target', '_self');
-        }
-
-        // Sólo añade el evento si el botón no está marcado como agotado
-        if (button.textContent !== 'AGOTADO' && !button.disabled) {
-            button.addEventListener('click', (e) => {
-                e.preventDefault(); // Detiene la navegación (si aplica)
-                showPaymentModal(productName);
-            });
-        }
-    });
-    
-    // --------------------------------------------------
-    // AÑADIDO: Lógica del Lightbox (Zoom de Imagen)
-    // --------------------------------------------------
-    const imageModal = document.getElementById('image-modal');
-    const fullImage = document.getElementById('full-image');
-    const imageCaption = document.getElementById('image-caption');
-    const imageCloseBtn = imageModal.querySelector('.modal-close-btn');
-    const zoomableImages = document.querySelectorAll('.zoomable-img');
-
-    function closeImageModal() {
-        imageModal.classList.remove('visible');
-        imageModal.style.display = "none";
-        document.body.style.overflow = 'auto';
-    }
-
-    imageCloseBtn.onclick = closeImageModal;
-    
-    // Cierra la imagen al hacer clic fuera
-    window.addEventListener('click', function(event) {
-        if (event.target == imageModal && imageModal.style.display === "block") {
-            closeImageModal();
-        }
-    });
-
-    zoomableImages.forEach(img => {
-        img.addEventListener('click', () => {
-            fullImage.src = img.src;
-            imageCaption.textContent = img.dataset.caption || img.alt;
-            imageModal.style.display = "block";
-            document.body.style.overflow = 'hidden';
+            
+            const buttons = element.querySelectorAll('.add-to-cart-btn, .buy-now-btn');
+            if (stock === 0) {
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    button.textContent = 'AGOTADO';
+                    button.classList.add('disabled-btn'); 
+                });
+                if (!isPackageCard) {
+                    const badge = element.querySelector('.brainrot-badge');
+                    if (badge) badge.textContent = 'AGOTADO';
+                    element.classList.add('out-of-stock-card');
+                }
+            } else {
+                 buttons.forEach(button => {
+                    button.disabled = false;
+                    button.classList.remove('disabled-btn'); 
+                    if (button.classList.contains('buy-now-btn')) {
+                         button.textContent = 'COMPRAR'; 
+                    } else if (button.classList.contains('add-to-cart-btn')) {
+                         button.innerHTML = '<i class="fas fa-cart-plus"></i> AGREGAR';
+                    }
+                });
+            }
         });
-    });
 
-    // --------------------------------------------------
-    // MODIFICADO: Lógica del Slider (Carrusel)
-    // SOLO APLICA A LA PÁGINA 'index.html'
-    // --------------------------------------------------
-    const track = document.querySelector('.carousel-track');
-    // Verificamos si el carrusel existe en la página
-    if (track) {
-        const slides = Array.from(track.children);
-        const nextButton = document.querySelector('.next-btn');
-        const prevButton = document.querySelector('.prev-btn');
-        const dotsNav = document.querySelector('.carousel-nav');
-        const dots = Array.from(dotsNav.children);
+        document.querySelectorAll('.add-to-cart-btn, .buy-now-btn').forEach(button => {
+            if (button.disabled) return; 
 
-        if (slides.length > 0) {
-            // Recalcula el ancho del slide en caso de redimensionamiento
-            const getSlideWidth = () => slides[0].getBoundingClientRect().width;
+            button.addEventListener('click', (e) => {
+                const buttonData = e.currentTarget.dataset;
+                const parentElement = e.currentTarget.closest('[data-product-id]');
+                const id = parentElement ? parentElement.dataset.productId : null;
 
-            const setSlidePosition = (slide, index) => {
-                slide.style.left = getSlideWidth() * index + 'px';
-            };
-            slides.forEach(setSlidePosition);
+                if (!id) {
+                    console.error("No se encontró el data-product-id para el botón.");
+                    return;
+                }
+                
+                let imageSrc = buttonData.imgSrc;
+                if (!imageSrc) {
+                    const imageElement = parentElement.querySelector('img.zoomable-img') || parentElement.querySelector('.brainrot-image img');
+                    if (imageElement) {
+                        imageSrc = imageElement.src; 
+                    }
+                }
 
-            const moveToSlide = (currentSlide, targetSlide) => {
-                track.style.transform = 'translateX(-' + targetSlide.style.left + ')';
-                currentSlide.classList.remove('current-slide');
-                targetSlide.classList.add('current-slide');
-            };
-
-            const updateDots = (currentDot, targetDot) => {
-                currentDot.classList.remove('current-slide');
-                targetDot.classList.add('current-slide');
-            };
-
-            nextButton.addEventListener('click', e => {
-                const currentSlide = track.querySelector('.current-slide');
-                const nextSlide = currentSlide.nextElementSibling;
-                const currentDot = dotsNav.querySelector('.current-slide');
-                const nextDot = currentDot.nextElementSibling;
-
-                if (nextSlide) {
-                    moveToSlide(currentSlide, nextSlide);
-                    updateDots(currentDot, nextDot);
+                const product = {
+                    id: id,
+                    name: buttonData.productName,
+                    price: parseInt(buttonData.price),
+                    image: imageSrc || '/src/assets/default_placeholder.png' 
+                };
+                
+                if (e.currentTarget.classList.contains('buy-now-btn')) {
+                    cart = [];
+                    addToCart(product, false); 
+                    
+                    const selectedProductNameElement = document.getElementById('selected-product-name');
+                    if (selectedProductNameElement) {
+                        selectedProductNameElement.innerHTML = `
+                            <p>Total a Pagar: <strong>${formatPrice(product.price)}</strong></p>
+                            <p>Artículo Comprado:</p>
+                            <div style="font-size: 0.9em; padding-left: 15px;">${product.name} (x1)</div>
+                        `;
+                    }
+                    
+                    cartModal.style.display = 'none'; 
+                    paymentModal.style.display = 'block'; 
+                } else {
+                    addToCart(product);
                 }
             });
-
-            prevButton.addEventListener('click', e => {
-                const currentSlide = track.querySelector('.current-slide');
-                const prevSlide = currentSlide.previousElementSibling;
-                const currentDot = dotsNav.querySelector('.current-slide');
-                const prevDot = currentDot.previousElementSibling;
-
-                if (prevSlide) {
-                    moveToSlide(currentSlide, prevSlide);
-                    updateDots(currentDot, prevDot);
-                }
-            });
-
-            dotsNav.addEventListener('click', e => {
-                const targetDot = e.target.closest('button');
-
-                if (!targetDot) return;
-
-                const currentSlide = track.querySelector('.current-slide');
-                const currentDot = dotsNav.querySelector('.current-slide');
-                const targetIndex = dots.findIndex(dot => dot === targetDot);
-                const targetSlide = slides[targetIndex];
-
-                moveToSlide(currentSlide, targetSlide);
-                updateDots(currentDot, targetDot);
-            });
-
-            // Re-calcular posición al redimensionar (mejor experiencia móvil/desktop)
-            window.addEventListener('resize', () => {
-                slides.forEach(setSlidePosition);
-                // Mueve la pista al slide actual después de redimensionar
-                const currentSlide = track.querySelector('.current-slide');
-                if (currentSlide) {
-                    track.style.transform = 'translateX(-' + currentSlide.style.left + ')';
-                }
-            });
-        }
-    }
-
-
-    // --- 3. Funcionalidad de Revelación al Scroll ---
-    const revealElements = document.querySelectorAll('.reveal');
-
-    const revealOnScroll = () => {
-        const windowHeight = window.innerHeight;
-        const revealPoint = 150;
-
-        revealElements.forEach(element => {
-            const rect = element.getBoundingClientRect();
-            if (rect.top < windowHeight - revealPoint) {
-                element.classList.add('active');
-            }
         });
     };
 
-    window.addEventListener('scroll', revealOnScroll);
-    window.addEventListener('load', revealOnScroll); // Para revelar elementos al cargar
+    const revealElements = document.querySelectorAll('.package-card, .section-title');
+    const checkReveal = () => {
+        const triggerBottom = window.innerHeight * 0.85;
+        revealElements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            if (elementTop < triggerBottom) {
+                element.classList.add('reveal', 'active');
+            } else {
+                element.classList.remove('active'); 
+            }
+        });
+    };
+    window.addEventListener('scroll', checkReveal);
+    checkReveal(); 
+
+    const track = document.querySelector('.carousel-track');
+    const slides = Array.from(document.querySelectorAll('.carousel-slide'));
+    const nextButton = document.querySelector('.next-btn');
+    const prevButton = document.querySelector('.prev-btn');
+    const dotsNav = document.querySelector('.carousel-nav');
+    
+    if (track) {
+        const slideWidth = slides[0].getBoundingClientRect().width;
+        let slideIndex = 0;
+
+        slides.forEach((slide, index) => {
+            slide.style.left = slideWidth * index + 'px';
+        });
+
+        const moveToSlide = (track, currentSlide, targetSlide) => {
+            track.style.transform = 'translateX(-' + targetSlide.style.left + ')';
+            currentSlide.classList.remove('current-slide');
+            targetSlide.classList.add('current-slide');
+            slideIndex = slides.findIndex(slide => slide === targetSlide);
+        };
+
+        const updateDots = (currentDot, targetDot) => {
+            currentDot.classList.remove('current-slide');
+            targetDot.classList.add('current-slide');
+        };
+
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                const currentSlide = track.querySelector('.current-slide') || slides[0];
+                const nextSlide = currentSlide.nextElementSibling || slides[0]; 
+                const currentDot = dotsNav.querySelector('.current-slide');
+                const nextDot = currentDot.nextElementSibling || dotsNav.firstElementChild; 
+                
+                moveToSlide(track, currentSlide, nextSlide);
+                updateDots(currentDot, nextDot);
+            });
+        }
+
+        if (prevButton) {
+            prevButton.addEventListener('click', () => {
+                const currentSlide = track.querySelector('.current-slide') || slides[0];
+                const prevSlide = currentSlide.previousElementSibling || slides[slides.length - 1]; 
+                const currentDot = dotsNav.querySelector('.current-slide');
+                const prevDot = currentDot.previousElementSibling || dotsNav.lastElementChild; 
+                
+                moveToSlide(track, currentSlide, prevSlide);
+                updateDots(currentDot, prevDot);
+            });
+        }
+
+        if (dotsNav) {
+            Array.from(dotsNav.children).forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    const targetDot = e.target;
+                    const targetIndex = Array.from(dotsNav.children).findIndex(child => child === targetDot);
+                    const targetSlide = slides[targetIndex];
+                    const currentSlide = track.querySelector('.current-slide');
+                    const currentDot = dotsNav.querySelector('.current-slide');
+                    
+                    moveToSlide(track, currentSlide, targetSlide);
+                    updateDots(currentDot, targetDot);
+                });
+            });
+        }
+
+        const adjustSlidePositions = () => {
+             const newSlideWidth = slides[0].getBoundingClientRect().width;
+             slides.forEach((slide, index) => {
+                 slide.style.left = newSlideWidth * index + 'px';
+             });
+             const currentSlide = track.querySelector('.current-slide') || slides[0];
+             if (currentSlide) {
+                track.style.transform = 'translateX(-' + currentSlide.style.left + ')';
+             }
+        };
+
+        window.addEventListener('resize', adjustSlidePositions);
+    }
+    
+    const imageModal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('full-image');
+    const captionText = document.getElementById('caption');
+    const imgCloseBtn = imageModal ? imageModal.querySelector('.modal-close-btn') : null;
+    
+    document.querySelectorAll('.zoomable-img').forEach(img => {
+        img.addEventListener('click', function() {
+            imageModal.style.display = 'block';
+            modalImg.src = this.src;
+            captionText.innerHTML = this.dataset.caption || this.alt;
+        });
+    });
+
+    if (imgCloseBtn) {
+        imgCloseBtn.addEventListener('click', () => {
+            imageModal.style.display = 'none';
+        });
+    }
+
+    if (imageModal) {
+         window.addEventListener('click', (e) => {
+            if (e.target === imageModal) {
+                imageModal.style.display = 'none';
+            }
+        });
+    }
 
 
-    // --------------------------------------------------
-    // AÑADIDO: 📊 Lógica de Paginación (Solo para brainrots.html)
-    // --------------------------------------------------
-    const brainrotGrid = document.getElementById('brainrot-grid');
+    const brainrotGrid = document.querySelector('.package-grid');
     if (brainrotGrid) {
-        const items = Array.from(brainrotGrid.children);
-        const itemsPerPage = 6; // Cantidad de productos por página
+        const items = Array.from(brainrotGrid.querySelectorAll('.package-card'));
         let currentPage = 1;
-        
+        const itemsPerPage = 8;
         const prevPageBtn = document.getElementById('prev-page');
         const nextPageBtn = document.getElementById('next-page');
         const pageInfoSpan = document.getElementById('page-info');
-
         const totalPages = Math.ceil(items.length / itemsPerPage);
 
         function displayPage(page) {
             const startIndex = (page - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
-
+            
             items.forEach((item, index) => {
                 item.style.display = (index >= startIndex && index < endIndex) ? 'block' : 'none';
             });
 
-            // Actualizar botones y texto
-            prevPageBtn.disabled = page === 1;
-            nextPageBtn.disabled = page === totalPages;
-            pageInfoSpan.textContent = `Página ${page} de ${totalPages}`;
-            
-            // Subir al inicio del grid después de la paginación
-            brainrotGrid.scrollIntoView({ behavior: 'smooth' });
+            if (prevPageBtn) {
+                 prevPageBtn.disabled = page === 1;
+            }
+            if (nextPageBtn) {
+                nextPageBtn.disabled = page === totalPages;
+            }
+            if (pageInfoSpan) {
+                pageInfoSpan.textContent = `Página ${page} de ${totalPages}`;
+            }
+
+            checkReveal();
         }
 
-        prevPageBtn.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                displayPage(currentPage);
-            }
-        });
+        if (prevPageBtn) {
+            prevPageBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayPage(currentPage);
+                }
+            });
+        }
 
-        nextPageBtn.addEventListener('click', () => {
-            if (currentPage < totalPages) {
-                currentPage++;
-                displayPage(currentPage);
-            }
-        });
+        if (nextPageBtn) {
+            nextPageBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayPage(currentPage);
+                }
+            });
+        }
 
-        // Inicializar la paginación si hay productos
         if (items.length > 0) {
             displayPage(currentPage);
         }
     }
-    
+
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            navToggle.innerHTML = navLinks.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+    }
+
+    initializeStore(); 
+    setupCartListeners(); 
+    updateCartCount(); 
 });
