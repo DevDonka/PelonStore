@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (emptyCartMessage) {
-            emptyCartMessage.style.display = totalItems === 0 ? 'block' : 'none';
+            emptyCartMessage.style.display = totalItems > 0 ? 'none' : 'block';
         }
 
     };
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (newQuantity <= 0) {
-                 removeItemFromCart(productId);
+                removeItemFromCart(productId);
             } else {
                 item.quantity = newQuantity;
                 localStorage.setItem(cartKey, JSON.stringify(cart));
@@ -106,19 +106,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const addToCart = (product, showAlert = true) => {
+    const addToCart = (product) => {
         const existingItem = cart.find(item => item.id === product.id);
         const maxStock = productStock[product.id] || 0;
         const currentInCart = existingItem ? existingItem.quantity : 0;
 
         if (maxStock === 0) {
             alert(`¡Producto agotado! ${product.name} ya no tiene stock disponible.`);
-            return;
+            return false;
         }
 
         if (currentInCart + 1 > maxStock) {
             alert(`¡Stock limitado! No puedes añadir más de ${maxStock} unidad(es) de ${product.name} en total.`);
-            return;
+            return false;
         }
 
         if (existingItem) {
@@ -129,10 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         localStorage.setItem(cartKey, JSON.stringify(cart));
         updateCartCount();
-
-        if (showAlert) {
-            alert(`${product.name} ha sido añadido al carrito.`);
-        }
+        return true;
     };
 
 
@@ -161,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-
         if (checkoutButton) {
             checkoutButton.addEventListener('click', () => {
                 if (cart.length > 0 && paymentModal) {
@@ -187,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
+        // ----------------------------------------------------------------
 
         const cartIcon = document.querySelector('.cart-icon');
         if (cartIcon && cartModal) {
@@ -220,20 +217,20 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const productStock = {
-        'Vaquitas-Saturnitas-5500': 10,
+        'Vaquitas-Saturnitas-5500': 1,
         'Extinct-Grande-7000': 1,
-        'Extinct-Grande-12000': 2,
+        'Extinct-Grande-12000': 1,
 
         'Hotspotsito': 7,
         'Sammini': 1,
-        'Samminy': 1,
+        'Sammini2': 1,
         'Tralalero-3500': 1,
-        'Tralalero-1500': 1,
+        'Tralalero-7000': 1,
         'Medussi-4000': 1,
         'Medussi-1000': 1,
         'Digitale-3500': 1,
         'Combinasionas-6000': 1,
-        'Combinasionas-5000': 2,
+        'Combinasionas-5000': 1,
         'JobSahur-3500': 1,
         'Vacca-Saturno-1000': 1,
         'Vacca-Saturno-3000': 1,
@@ -241,6 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Tractoro-Dinosauro-2500': 1,
         'Gattito-Tocoto-2500': 1,
         'Beluga-2000': 1,
+        'Grabbo': 1,
         'Vaquitas-Saturnitas-5500-G': 1,
         'nohay': 0,
     };
@@ -310,13 +308,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     element.classList.add('out-of-stock-card');
                 }
             } else {
-                 buttons.forEach(button => {
+                buttons.forEach(button => {
                     button.disabled = false;
                     button.classList.remove('disabled-btn');
                     if (button.classList.contains('buy-now-btn')) {
-                         button.textContent = 'COMPRAR';
+                        button.textContent = 'COMPRAR';
                     } else if (button.classList.contains('add-to-cart-btn')) {
-                         button.innerHTML = '<i class="fas fa-cart-plus"></i> AGREGAR';
+                        button.innerHTML = '<i class="fas fa-cart-plus"></i> AGREGAR';
                     }
                 });
             }
@@ -350,33 +348,33 @@ document.addEventListener('DOMContentLoaded', () => {
                     image: imageSrc || '/src/assets/default_placeholder.png'
                 };
 
-                // --- INICIO DE LA SECCIÓN CORREGIDA (SOLUCIÓN FINAL PARA 'COMPRAR AHORA') ---
+                
                 if (e.currentTarget.classList.contains('buy-now-btn')) {
-                    // 1. **NO** se añade el producto al carrito.
-                    // 2. Usamos los datos del producto actual (product) para el resumen de pago.
-
                     const selectedProductNameElement = document.getElementById('selected-product-name');
-                    
                     if (selectedProductNameElement && paymentModal) {
-                        const totalPagar = formatPrice(product.price);
                         
+                        const singleProductSummary = `${product.name} (x1)`;
+                        
+                        const totalPagar = formatPrice(product.price);
+
                         selectedProductNameElement.innerHTML = `
                             <p>Total a Pagar: <strong>${totalPagar}</strong></p>
-                            <p>Artículo Comprado:</p>
-                            <div style="font-size: 0.9em; padding-left: 15px;">${product.name} (x1)</div>
+                            <p>Artículo:</p>
+                            <div style="font-size: 0.9em; padding-left: 15px;">${singleProductSummary}</div>
                         `;
 
-                        // 3. Abrimos la modal de pago directamente, sin pasar por la lógica del carrito.
-                        cartModal.style.display = 'none';
+                        if(cartModal) cartModal.style.display = 'none';
                         paymentModal.style.display = 'block';
-                    }
-                    
-                } else {
-                    // Lógica para el botón 'AGREGAR'
-                    addToCart(product); 
-                }
-                // --- FIN DE LA SECCIÓN CORREGIDA ---
 
+                    } else {
+                        alert(`Iniciando compra de ${product.name} por ${formatPrice(product.price)}.`);
+                    }
+                } else {
+                    const success = addToCart(product); 
+                    if (success) {
+                        alert(`${product.name} ha sido añadido al carrito.`);
+                    }
+                }
             });
         });
     };
@@ -462,14 +460,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const adjustSlidePositions = () => {
-             const newSlideWidth = slides[0].getBoundingClientRect().width;
-             slides.forEach((slide, index) => {
-                 slide.style.left = newSlideWidth * index + 'px';
-             });
-             const currentSlide = track.querySelector('.current-slide') || slides[0];
-             if (currentSlide) {
-                 track.style.transform = 'translateX(-' + currentSlide.style.left + ')';
-             }
+            const newSlideWidth = slides[0].getBoundingClientRect().width;
+            slides.forEach((slide, index) => {
+                slide.style.left = newSlideWidth * index + 'px';
+            });
+            const currentSlide = track.querySelector('.current-slide') || slides[0];
+            if (currentSlide) {
+                track.style.transform = 'translateX(-' + currentSlide.style.left + ')';
+            }
         };
 
         window.addEventListener('resize', adjustSlidePositions);
@@ -495,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (imageModal) {
-          window.addEventListener('click', (e) => {
+        window.addEventListener('click', (e) => {
             if (e.target === imageModal) {
                 imageModal.style.display = 'none';
             }
@@ -507,7 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (brainrotGrid) {
         const items = Array.from(brainrotGrid.querySelectorAll('.package-card'));
         let currentPage = 1;
-        const itemsPerPage = 8;
+        const itemsPerPage = 6;
         const totalPages = Math.ceil(items.length / itemsPerPage);
 
         const prevPageBtn = document.getElementById('prev-page');
@@ -523,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (prevPageBtn) {
-                 prevPageBtn.disabled = page === 1;
+                prevPageBtn.disabled = page === 1;
             }
             if (nextPageBtn) {
                 nextPageBtn.disabled = page === totalPages;
@@ -535,11 +533,10 @@ document.addEventListener('DOMContentLoaded', () => {
             checkReveal();
         }
 
-        /*
         if (items.length > 0) {
             displayPage(currentPage);
         }
-        */
+        
 
         if (prevPageBtn) {
             prevPageBtn.addEventListener('click', () => {
