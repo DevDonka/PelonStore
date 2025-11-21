@@ -72,19 +72,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateItemQuantity = (productId, change) => {
         const item = cart.find(item => item.id === productId);
-        const maxStock = productStock[productId] || 0;
+        const maxStock = productStock[productId] || 0; 
 
         if (item) {
-            if (change > 0 && item.quantity >= maxStock) {
-                alert(`¡Stock limitado! No puedes añadir más de ${item.name} (${maxStock} unidades).`);
+            const newQuantity = item.quantity + change;
+
+            // ARREGLO DE STOCK: Evita superar el stock máximo al aumentar.
+            if (newQuantity > maxStock && change > 0) { 
+                alert(`¡Stock limitado! No puedes añadir más de ${maxStock} unidad(es) de ${item.name} en total.`);
                 return;
             }
 
-            item.quantity += change;
-
-            if (item.quantity <= 0) {
-                 removeItemFromCart(productId);
+            if (newQuantity <= 0) {
+                 removeItemFromCart(productId); 
             } else {
+                item.quantity = newQuantity; 
                 localStorage.setItem(cartKey, JSON.stringify(cart));
                 updateCartCount();
                 calculateCartTotals();
@@ -109,9 +111,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const existingItem = cart.find(item => item.id === product.id);
         const maxStock = productStock[product.id] || 0;
         const currentInCart = existingItem ? existingItem.quantity : 0;
+        
+        // ARREGLO DE STOCK: 1. Verificar si el stock es cero.
+        if (maxStock === 0) {
+            alert(`¡Producto agotado! ${product.name} ya no tiene stock disponible.`);
+            return;
+        }
 
-        if (currentInCart >= maxStock) {
-            alert(`¡Stock limitado! Ya tienes ${currentInCart} unidad(es) de ${product.name} en el carrito y el stock disponible es ${maxStock}.`);
+        // ARREGLO DE STOCK: 2. Verificar si al añadir 1, se excede el stock máximo.
+        if (currentInCart + 1 > maxStock) { 
+            alert(`¡Stock limitado! No puedes añadir más de ${maxStock} unidad(es) de ${product.name} en total.`);
             return;
         }
 
@@ -140,10 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productId = target.dataset.id;
                 if (!productId) return; 
                 
-                const maxStock = productStock[productId] || 0;
-                const item = cart.find(item => item.id === productId);
-
-
                 if (target.classList.contains('remove-item-btn')) {
                     if (confirm('¿Estás seguro de que quieres eliminar este artículo del carrito?')) {
                         removeItemFromCart(productId);
@@ -155,11 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 else if (target.classList.contains('plus-btn')) {
-                    if (item && item.quantity < maxStock) {
-                        updateItemQuantity(productId, 1);
-                    } else if (item) {
-                        alert(`¡Stock limitado! No puedes añadir más de ${item.name} (${maxStock} unidades).`);
-                    }
+                    updateItemQuantity(productId, 1); 
                 }
             });
         }
@@ -244,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Gattito-Tocoto-2500': 1, 
         'Beluga-2000': 1, 
         'Vaquitas-Saturnitas-5500-G': 1, 
+        'nohay': 0,
     };
 
     const themeToggle = document.getElementById('theme-toggle');
@@ -500,10 +502,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const items = Array.from(brainrotGrid.querySelectorAll('.package-card'));
         let currentPage = 1;
         const itemsPerPage = 8;
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+        
         const prevPageBtn = document.getElementById('prev-page');
         const nextPageBtn = document.getElementById('next-page');
         const pageInfoSpan = document.getElementById('page-info');
-        const totalPages = Math.ceil(items.length / itemsPerPage);
 
         function displayPage(page) {
             const startIndex = (page - 1) * itemsPerPage;
@@ -525,7 +528,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             checkReveal();
         }
-
+        
+        // **ARREGLO DE PRODUCTOS NO VISIBLES:** Se desactiva la paginación inicial para que se vean todos.
+        // Si el usuario añade los botones de paginación al HTML, puede descomentar la línea de abajo.
+        /*
+        if (items.length > 0) {
+            displayPage(currentPage);
+        }
+        */
+        
         if (prevPageBtn) {
             prevPageBtn.addEventListener('click', () => {
                 if (currentPage > 1) {
@@ -543,21 +554,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-
-        if (items.length > 0) {
-            displayPage(currentPage);
-        }
     }
 
+    // ===========================================
+    // 🛠️ FIX MENÚ HAMBURGUESA (navToggle logic)
+    // ===========================================
     const navToggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
 
-    if (navToggle) {
+    if (navToggle && navLinks) {
+        // Asegura que el estado inicial del icono sea el de la hamburguesa
+        navToggle.innerHTML = '<i class="fas fa-bars"></i>'; 
+        
         navToggle.addEventListener('click', () => {
+            // Alterna la clase 'active' que definimos en CSS para mostrar/ocultar
             navLinks.classList.toggle('active');
-            navToggle.innerHTML = navLinks.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            
+            // Cambia el icono basado en si la clase 'active' está presente
+            if (navLinks.classList.contains('active')) {
+                navToggle.innerHTML = '<i class="fas fa-times"></i>'; // Icono de cerrar (X)
+            } else {
+                navToggle.innerHTML = '<i class="fas fa-bars"></i>'; // Icono de hamburguesa
+            }
         });
 
+        // Cierra el menú cuando se hace clic en un enlace
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');

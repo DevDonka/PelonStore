@@ -1,27 +1,30 @@
 :root {
-    --primary-color: #007bff;
-    --secondary-color: #ff4500;
-    --text-color: #2c3e50;
-    --secondary-text-color: #6c757d;
-    --light-text: #ecf0f1;
-    --background-light: #f4f6f8;
-    --card-background: #ffffff;
+    /* Modo Claro */
+    --primary-color: #007bff; /* Azul vibrante para botones */
+    --secondary-color: #ff4500; /* Naranja/Rojo para destacar */
+    --text-color: #2c3e50; /* Texto oscuro principal */
+    --secondary-text-color: #6c757d; /* Corregido: Gris para texto secundario */
+    --light-text: #ecf0f1; /* Texto para fondos oscuros */
+    --background-light: #f4f6f8; /* Fondo claro de la página */
+    --card-background: #ffffff; /* Fondo de las tarjetas de producto */
     --shadow-light: rgba(0, 0, 0, 0.08);
     --border-color: #ddd;
 }
 
+/* Modo Oscuro: Sobreescritura de variables */
 :root[data-theme="dark"] {
-    --primary-color: #3498db;
-    --secondary-color: #e74c3c;
+    --primary-color: #3498db; /* Azul más claro */
+    --secondary-color: #e74c3c; /* Rojo intenso */
     --text-color: #ecf0f1;
-    --secondary-text-color: #b0b0b0;
+    --secondary-text-color: #b0b0b0; /* Corregido: Gris más claro para modo oscuro */
     --light-text: #9e9e9e;
-    --background-light: #1c2833;
-    --card-background: #21303e;
-    --shadow-light: rgba(0, 0, 0, 0.4);
+    --background-light: #1c2833; /* Fondo oscuro */
+    --card-background: #21303e; /* Tarjetas oscuras */
+    --shadow-light: rgba(0, 0, 0, 0.4); /* Sombra más pronunciada en oscuro */
     --border-color: #34495e;
 }
 
+/* Estilos Globales y Tipografía */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -48,6 +51,7 @@ h1, h2, h3 {
     padding: 0 20px;
 }
 
+/* --- PRELOADER --- */
 #preloader {
     position: fixed;
     top: 0;
@@ -84,6 +88,8 @@ h1, h2, h3 {
     100% { transform: rotate(360deg); }
 }
 
+
+/* --- NAV BAR (Fixed) --- */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -136,6 +142,7 @@ h1, h2, h3 {
 .nav-links a:hover {
     color: var(--primary-color);
 }
+/* Estilos de carrito */
 .cart-icon {
     font-size: 1.5rem;
     color: var(--text-color);
@@ -161,6 +168,18 @@ h1, h2, h3 {
     font-weight: 800;
 }
 
+/* Botón Hamburguesa */
+.nav-toggle {
+    display: none; /* Oculto por defecto en escritorio */
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+/* --- HERO SECTION (PARALLAX) --- */
 .hero {
     padding-top: 0;
     text-align: center;
@@ -212,6 +231,7 @@ h1, h2, h3 {
     margin-top: 20px;
 }
 
+/* CTA Button - Mejoras de diseño */
 .cta-button {
     display: inline-block;
     background-color: var(--secondary-color);
@@ -247,6 +267,7 @@ h1, h2, h3 {
     color: var(--primary-color);
 }
 
+/* --- PRODUCT GRID (TIENDA) --- */
 .section-title {
     text-align: center;
     font-size: 2.5rem;
@@ -308,6 +329,7 @@ h1, h2, h3 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Detalles de producto */
 .package-img {
     height: 180px;
     position: relative;
@@ -431,6 +453,8 @@ h1, h2, h3 {
     background-color: #ff6347;
 }
 
+
+/* --- FOOTER --- */
 .footer {
     background-color: var(--text-color);
     color: var(--light-text);
@@ -467,6 +491,8 @@ h1, h2, h3 {
     opacity: 0.7;
 }
 
+
+/* --- ANIMACIONES --- */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -511,40 +537,7 @@ h1, h2, h3 {
     animation-fill-mode: both;
 }
 
-@media (max-width: 768px) {
-    .navbar {
-        padding: 10px 15px;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .nav-links {
-        display: none;
-    }
-
-    .nav-utils {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .hero {
-        height: 50vh;
-        background-attachment: scroll;
-        padding-top: 120px;
-    }
-
-    .hero h1 {
-        font-size: 2.5rem;
-    }
-
-    .package-grid {
-        grid-template-columns: 1fr;
-    }
-    .payment-content {
-        margin: 5% 15px;
-    }
-}
-
+/* --- ESTILOS DEL SLIDER / CARRUSEL --- */
 .slider-section {
     margin-bottom: 60px;
     position: relative;
@@ -656,29 +649,30 @@ h1, h2, h3 {
     transform: rotate(0deg) scale(1.05);
 }
 
+/* --- MEJORAS PARA LOS BOTONES DEL SLIDER / CARRUSEL --- */
 .slider-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: var(--card-background);
-    border: 2px solid var(--primary-color);
+    background: var(--card-background); 
+    border: 2px solid var(--primary-color); 
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    color: var(--primary-color);
-    font-size: 1.5rem;
+    color: var(--primary-color); 
+    font-size: 1.5rem; 
     cursor: pointer;
     z-index: 10;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+    display: flex; 
     justify-content: center;
     align-items: center;
 }
 
 :root[data-theme="dark"] .slider-btn {
-    background: var(--background-light);
-    border: 2px solid var(--secondary-color);
+    background: var(--background-light); 
+    border: 2px solid var(--secondary-color); 
     color: var(--secondary-color);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
@@ -688,9 +682,9 @@ h1, h2, h3 {
 
 .slider-btn:hover {
     background: var(--secondary-color);
-    color: var(--light-text);
+    color: var(--light-text); 
     border-color: var(--secondary-color);
-    transform: translateY(-50%) scale(1.1);
+    transform: translateY(-50%) scale(1.1); 
     box-shadow: 0 6px 20px rgba(255, 69, 0, 0.5);
 }
 
@@ -728,31 +722,10 @@ h1, h2, h3 {
     transform: scale(1.2);
 }
 
-@media (max-width: 768px) {
-    .carousel-container {
-        height: auto;
-        margin: 0 20px;
-    }
 
-    .brainrot-card {
-        flex-direction: column-reverse;
-        text-align: center;
-        padding: 30px 20px;
-    }
-
-    .brainrot-content {
-        padding-right: 0;
-        text-align: center;
-    }
-
-    .brainrot-image {
-        margin-bottom: 20px;
-    }
-
-    .prev-btn, .next-btn {
-        display: none;
-    }
-}
+/* ------------------------------------------- */
+/* MODAL GENERAL (Lightbox y Pago) */
+/* ------------------------------------------- */
 
 .modal {
     display: none;
@@ -767,6 +740,7 @@ h1, h2, h3 {
     background-color: rgba(0,0,0,0.9);
 }
 
+/* Cierre General */
 .modal-close-btn {
     position: absolute;
     top: 15px;
@@ -784,6 +758,10 @@ h1, h2, h3 {
     cursor: pointer;
 }
 
+
+/* ------------------------------------------- */
+/* MODAL DE IMAGEN (Lightbox) */
+/* ------------------------------------------- */
 .package-img img.zoomable-img {
     cursor: pointer;
     transition: transform 0.3s ease;
@@ -793,7 +771,7 @@ h1, h2, h3 {
     transform: scale(1.05);
 }
 
-.modal-content {
+.modal-content { /* Usado por el modal de imagen */
     margin: auto;
     display: block;
     width: 90%;
@@ -820,6 +798,10 @@ h1, h2, h3 {
     to {transform:scale(1)}
 }
 
+/* ------------------------------------------- */
+/* NUEVOS ESTILOS PARA EL MODAL DE PAGO */
+/* ------------------------------------------- */
+
 .payment-content {
     background-color: var(--card-background);
     color: var(--text-color);
@@ -830,6 +812,7 @@ h1, h2, h3 {
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     animation-name: slideIn;
     animation-duration: 0.5s;
+    /* Sobrescribe el ancho del modal de imagen */
     max-width: 550px !important;
     width: auto !important;
 }
@@ -846,11 +829,16 @@ h1, h2, h3 {
 }
 
 .payment-close-btn {
+    position: absolute;
     top: 15px;
     right: 25px;
     color: var(--text-color);
     opacity: 0.7;
+    /* Sobrescribe el estilo de cierre general */
     font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .payment-close-btn:hover {
@@ -888,6 +876,7 @@ h1, h2, h3 {
     align-items: center;
 }
 
+/* Caja de Alias Destacada */
 .payment-alias-box {
     background-color: var(--background-light);
     border: 2px dashed var(--primary-color);
@@ -927,6 +916,7 @@ h1, h2, h3 {
     font-weight: 800;
 }
 
+/* Grid de Contacto */
 .contact-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -967,51 +957,56 @@ h1, h2, h3 {
 }
 .pagination-controls {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    margin: 40px auto 60px auto;
+    justify-content: center; 
+    align-items: center; 
+    gap: 30px; 
+    margin: 40px auto 60px auto; 
     padding: 15px 20px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-color); 
 }
 
+/* Estilo para los botones de paginación (clase .secondary-cta) */
 .pagination-controls .cta-button.secondary-cta {
     padding: 10px 20px;
     font-size: 1rem;
     font-weight: 700;
-    border-radius: 8px;
+    border-radius: 8px; 
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    background-color: var(--card-background);
+    
+    background-color: var(--card-background); 
     border: 2px solid var(--primary-color);
     color: var(--primary-color);
     box-shadow: 0 4px 12px var(--shadow-light);
     transition: all 0.3s ease;
 }
 
+/* Efecto Hover en los botones */
 .pagination-controls .cta-button.secondary-cta:hover:not(:disabled) {
     background-color: var(--primary-color);
     color: var(--light-text);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px var(--shadow-light);
+    box-shadow: 0 6px 20px var(--shadow-light); 
 }
 
+/* Estilo para botones deshabilitados (e.g., Anterior en la página 1) */
 .pagination-controls .cta-button.secondary-cta:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    background-color: var(--background-light);
+    background-color: var(--background-light); 
     color: var(--text-color);
     border-color: var(--border-color);
     transform: none;
     box-shadow: none;
 }
 
+/* Estilo para el texto de información de la página */
 #page-info {
     font-family: 'Inter', sans-serif;
     font-weight: 800;
     font-size: 1.3rem;
-    color: var(--secondary-color);
+    color: var(--secondary-color); 
     min-width: 140px;
     text-align: center;
     padding: 5px 10px;
@@ -1021,6 +1016,7 @@ h1, h2, h3 {
     transition: all 0.3s ease;
 }
 
+/* 🌙 Ajustes para modo oscuro para la paginación */
 :root[data-theme="dark"] .pagination-controls .cta-button.secondary-cta {
     border: 2px solid var(--secondary-color);
     color: var(--secondary-color);
@@ -1028,7 +1024,7 @@ h1, h2, h3 {
 
 :root[data-theme="dark"] .pagination-controls .cta-button.secondary-cta:hover:not(:disabled) {
     background-color: var(--secondary-color);
-    color: var(--text-color);
+    color: var(--text-color); 
     border-color: var(--secondary-color);
 }
 
@@ -1037,6 +1033,11 @@ h1, h2, h3 {
     border: 2px solid var(--secondary-color);
     background-color: var(--card-background);
 }
+/* --- FIN ESTILOS DE PAGINACIÓN --- */
+
+/* ========================================= */
+/* 🛒 ESTILOS DEL CARRITO Y CHECKOUT MODAL */
+/* ========================================= */
 
 .cart-content {
     max-width: 600px;
@@ -1047,9 +1048,10 @@ h1, h2, h3 {
     max-height: 400px;
     overflow-y: auto;
     margin-bottom: 20px;
-    padding-right: 10px;
+    padding-right: 10px; /* Espacio para el scrollbar */
 }
 
+/* Estilo para cada item en el carrito */
 .cart-item {
     display: flex;
     align-items: center;
@@ -1057,6 +1059,7 @@ h1, h2, h3 {
     padding: 15px 0;
     border-bottom: 1px dashed var(--border-color);
     gap: 10px;
+    position: relative; 
 }
 
 .cart-item:last-child {
@@ -1084,7 +1087,7 @@ h1, h2, h3 {
 
 .cart-item .item-details .item-price-single {
     font-size: 0.85rem;
-    color: var(--secondary-text-color);
+    color: var(--secondary-text-color); 
     margin: 3px 0 0 0;
 }
 
@@ -1123,22 +1126,37 @@ h1, h2, h3 {
     color: var(--secondary-color);
 }
 
+/* 🗑️ ESTILO DEL BOTÓN DE ELIMINAR */
 .remove-item-btn {
     background: none;
     border: none;
-    color: var(--secondary-color);
     cursor: pointer;
-    padding: 5px;
-    margin-left: 10px;
-    font-size: 1.1rem;
-    transition: color 0.2s;
+    
+    color: var(--secondary-color); /* Color de alerta */
+    font-size: 1.2rem; 
+    padding: 8px; 
+    margin-left: 5px; 
+    border-radius: 50%; /* Circular para un look más moderno */
+    transition: all 0.2s ease;
+    
+    flex-shrink: 0;
 }
 
 .remove-item-btn:hover {
-    color: var(--primary-color);
+    /* Fondo sutil semi-transparente en hover */
+    background-color: rgba(255, 69, 0, 0.15); 
+    color: var(--primary-color); /* Cambiamos el color del icono a primario para destacarlo */
     transform: scale(1.1);
 }
 
+/* 🌙 Ajuste de hover en modo oscuro */
+:root[data-theme="dark"] .remove-item-btn:hover {
+    background-color: rgba(231, 76, 60, 0.2); 
+    color: var(--primary-color); 
+}
+
+
+/* Resumen del Carrito */
 .cart-summary {
     border-top: 2px solid var(--primary-color);
     padding-top: 15px;
@@ -1170,20 +1188,22 @@ h1, h2, h3 {
     box-shadow: none;
 }
 
+/* Feedback de Añadido */
 .add-to-cart-btn.added-feedback {
-    background-color: #2ecc71;
+    background-color: #2ecc71; /* Verde de éxito */
     transform: scale(1.05);
     transition: transform 0.1s;
-    pointer-events: none;
+    pointer-events: none; /* Evita clics repetidos */
 }
 
 .small-text-note {
     font-size: 0.75rem;
-    color: var(--secondary-text-color);
+    color: var(--secondary-text-color); 
     text-align: center;
     margin-top: 10px;
 }
 
+/* Ajustes de Color en Modo Oscuro */
 :root[data-theme="dark"] .cart-item img {
     border: 1px solid var(--text-color);
 }
@@ -1191,6 +1211,8 @@ h1, h2, h3 {
     border-bottom: 1px dashed var(--text-color);
 }
 
+
+/* Asegurar que el icono del carrito en el navbar se vea como un botón */
 .cart-icon {
     cursor: pointer;
     position: relative;
@@ -1203,6 +1225,7 @@ h1, h2, h3 {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Contador del carrito */
 .cart-count {
     position: absolute;
     top: 0;
@@ -1212,7 +1235,7 @@ h1, h2, h3 {
     border-radius: 50%;
     width: 20px;
     height: 20px;
-    display: none;
+    display: none; 
     align-items: center;
     justify-content: center;
     font-size: 0.75rem;
@@ -1221,40 +1244,49 @@ h1, h2, h3 {
     z-index: 10;
 }
 
+/* ------------------------------------------- */
+/* MODIFICACIONES Y CONSOLIDACIÓN DE BOTONES */
+/* ------------------------------------------- */
+
+/* Contenedor Flex para alinear los botones y ocupar el 100% del espacio */
 .product-buttons {
     display: flex;
-    gap: 10px;
+    gap: 10px; /* Espacio entre los botones */
     margin-top: 15px;
     width: 100%;
 }
 
+/* Estilos para IGUALAR ANCHO Y centrar contenido */
 .add-to-cart-btn,
 .buy-now-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 15px;
-    font-size: 0.95rem;
+    flex: 1; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 12px 15px; 
+    font-size: 0.95rem; 
     font-weight: 600;
     text-transform: uppercase;
+    
     border: none;
-    border-radius: 8px;
+    border-radius: 8px; 
     cursor: pointer;
-    color: white;
+    color: white; 
     transition: background-color 0.3s ease;
 }
 
+/* Botón AGREGAR AL CARRITO (VERDE) */
 .add-to-cart-btn {
-    background-color: #28a745;
+    background-color: #28a745; 
 }
 .add-to-cart-btn:hover {
     background-color: #1e7e34;
 }
 
+/* Botón COMPRAR (NARANJA) */
 .buy-now-btn {
-    background-color: #ff8c00;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    background-color: #ff8c00; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
 }
 .buy-now-btn:hover {
     background-color: #e07b00;
@@ -1262,75 +1294,236 @@ h1, h2, h3 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Espacio del icono */
 .add-to-cart-btn i,
 .buy-now-btn i {
     margin-right: 6px;
 }
 
-.add-to-cart-btn.added-feedback {
+/* Feedback al añadir */
+.add-to-cart-btn.added-feedback { 
     background-color: green !important;
     transform: scale(1.05);
 }
 
-.nav-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: var(--text-color);
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0 10px;
-}
+/* ========================================= */
+/* 🍔 SOLUCIÓN DE MENÚ MÓVIL (HAMBURGER) */
+/* ========================================= */
 
+/* ------------------------------------------- */
+/* 📱 MEDIA QUERY PRINCIPAL (OPTIMIZADA) 📱 */
+/* ------------------------------------------- */
 @media (max-width: 900px) {
-    .navbar {
-        padding: 10px 20px;
-        justify-content: space-between;
+    /* --- NAV BAR Y CONTENEDOR (FIX MENÚ) --- */
+    body {
+        padding-top: 60px;
     }
 
+    .navbar {
+        padding: 10px 20px;
+        flex-direction: row; 
+        gap: 0;
+    }
+
+    .nav-toggle {
+        display: block; /* Muestra el botón de hamburguesa */
+    }
+
+    /* Oculta los enlaces por defecto para ser controlados por JS */
     .nav-links {
-        display: none;
+        display: flex; /* Mantener flex para la columna de enlaces */
         flex-direction: column;
-        position: absolute;
-        top: 60px;
+        position: absolute; /* CLAVE: Para que flote sobre el contenido */
+        top: 60px; /* Debajo de la navbar */
         left: 0;
         width: 100%;
-        background-color: var(--background-light);
+        background-color: var(--card-background);
         box-shadow: 0 4px 8px var(--shadow-light);
         padding: 10px 0;
         z-index: 999;
+        /* La clave es la transformación para ocultar/mostrar */
+        transform: translateY(-100%); 
         transition: transform 0.3s ease-in-out;
-        transform: translateY(-100%);
         border-top: 1px solid var(--border-color);
+        /* FIX CLAVE: Asegurar que esté completamente oculto y no bloquee clics */
+        visibility: hidden; 
+        pointer-events: none;
     }
 
+    /* Estado activo: Muestra el menú */
     .nav-links.active {
-        display: flex;
         transform: translateY(0);
+        /* FIX CLAVE: Hacer visible y reactivar clics */
+        visibility: visible;
+        pointer-events: all;
     }
 
     .nav-links a {
         padding: 15px 20px;
         text-align: center;
-        width: 100%;
         border-bottom: 1px solid var(--border-color);
     }
 
     .nav-links a:last-child {
         border-bottom: none;
     }
-
+    
     .nav-utils {
-        display: flex;
-        align-items: center;
+        width: auto; 
         gap: 10px;
     }
-
-    .nav-toggle {
-        display: block;
+    
+    .container {
+        padding: 0 15px; 
     }
 
-    .product-buttons {
+    /* --- HERO SECTION --- */
+    .hero {
+        height: auto; 
+        min-height: 40vh;
+        background-attachment: scroll; 
+    }
+
+    .hero h1 {
+        font-size: 2rem; 
+    }
+
+    .hero-buttons {
+        flex-direction: column; 
+        gap: 15px;
+    }
+
+    /* --- REJILLAS DE PRODUCTOS --- */
+    .package-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    /* --- MODALES Y CARRITO --- */
+    .payment-content {
+        margin: 5% 15px; 
+    }
+
+    .cart-content {
+        padding: 20px;
+    }
+
+    /* Ajuste de item en carrito */
+    .cart-item {
         flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .cart-item img {
+        margin-bottom: 5px;
+    }
+
+    .cart-item .item-details {
+        width: 100%;
+        margin-right: 0;
+    }
+    
+    .item-quantity-control {
+        margin-top: 10px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .item-total {
+        min-width: auto;
+        text-align: left;
+        margin-top: 5px;
+    }
+    
+    /* FIX BOTÓN DE ELIMINAR: Posicionamiento absoluto dentro del cart-item (relative) */
+    .remove-item-btn {
+        position: absolute;
+        right: 10px; 
+        top: 10px; 
+        font-size: 1.1rem;
+    }
+
+    /* --- SLIDER / CARRUSEL (CORRECCIÓN FINAL V2) --- */
+    .carousel-container {
+        /* FIX: Altura fija para asegurar que el área de deslizamiento se vea */
+        height: 350px; 
+        margin: 0 5px; 
+        overflow: hidden; 
+    }
+
+    .brainrot-card {
+        /* FIX: Forzar la dirección horizontal para que el carrusel se mueva lateralmente */
+        flex-direction: row !important;
+        align-items: center;
+        padding: 15px; 
+    }
+    
+    .brainrot-content {
+        flex: 1; 
+        padding-right: 5px; 
+        text-align: left; 
+    }
+
+    .brainrot-image {
+        /* FIX: Definir un ancho fijo para el diseño horizontal */
+        flex: 0 0 40%; 
+        max-width: 40%;
+        margin-bottom: 0;
+    }
+    
+    .brainrot-image img {
+        transform: none; 
+        max-width: 100%; 
+        margin: 0;
+    }
+
+    .brainrot-content h3 {
+        font-size: 1.3rem; 
+        margin-bottom: 5px;
+    }
+
+    .brainrot-content p {
+        font-size: 0.85rem; 
+        display: none; /* Ocultar el texto largo para ahorrar espacio y evitar superposición */
+    }
+
+    .brainrot-content .price-tag {
+        font-size: 1.5rem;
+    }
+
+    /* FIX CLAVE: MOSTRAR LOS BOTONES Y ACERCARLOS */
+    .prev-btn { left: 5px; display: flex; } 
+    .next-btn { right: 5px; display: flex; } 
+    .slider-btn {
+        width: 35px; /* Reducir tamaño de botón */
+        height: 35px;
+        font-size: 1rem;
+    }
+
+    /* --- FOOTER --- */
+    .footer {
+        padding: 30px 15px 15px;
+    }
+
+    /* --- BOTONES DE PRODUCTO (AGREGAR Y COMPRAR) --- */
+    .product-buttons {
+        flex-direction: column; 
+        gap: 10px;
+    }
+    
+    /* --- PAGINACIÓN --- */
+    .pagination-controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .pagination-controls .cta-button.secondary-cta {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    #page-info {
+        font-size: 1.1rem;
     }
 }
