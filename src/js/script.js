@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         'Hotspotsito': 7,
         'Sammini': 1,
-        'Sammini2': 1,
+        'Samminy': 1,
         'Tralalero-3500': 1,
         'Tralalero-1500': 1,
         'Medussi-4000': 1,
@@ -350,24 +350,33 @@ document.addEventListener('DOMContentLoaded', () => {
                     image: imageSrc || '/src/assets/default_placeholder.png'
                 };
 
+                // --- INICIO DE LA SECCIÓN CORREGIDA (SOLUCIÓN FINAL PARA 'COMPRAR AHORA') ---
                 if (e.currentTarget.classList.contains('buy-now-btn')) {
-                    cart = [];
-                    addToCart(product, false);
+                    // 1. **NO** se añade el producto al carrito.
+                    // 2. Usamos los datos del producto actual (product) para el resumen de pago.
 
                     const selectedProductNameElement = document.getElementById('selected-product-name');
-                    if (selectedProductNameElement) {
+                    
+                    if (selectedProductNameElement && paymentModal) {
+                        const totalPagar = formatPrice(product.price);
+                        
                         selectedProductNameElement.innerHTML = `
-                            <p>Total a Pagar: <strong>${formatPrice(product.price)}</strong></p>
+                            <p>Total a Pagar: <strong>${totalPagar}</strong></p>
                             <p>Artículo Comprado:</p>
                             <div style="font-size: 0.9em; padding-left: 15px;">${product.name} (x1)</div>
                         `;
-                    }
 
-                    cartModal.style.display = 'none';
-                    paymentModal.style.display = 'block';
+                        // 3. Abrimos la modal de pago directamente, sin pasar por la lógica del carrito.
+                        cartModal.style.display = 'none';
+                        paymentModal.style.display = 'block';
+                    }
+                    
                 } else {
-                    addToCart(product);
+                    // Lógica para el botón 'AGREGAR'
+                    addToCart(product); 
                 }
+                // --- FIN DE LA SECCIÓN CORREGIDA ---
+
             });
         });
     };
