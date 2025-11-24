@@ -1,31 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const productStock = {
-        "Vaquitas-Saturnitas-5500": 1,
-        "Extinct-Grande-7000": 1,
-        "Extinct-Grande-12000": 1,
-        "Hotspotsito": 1,
-        "Sammini": 1,
-        "Sammini2": 1,
-        "Samminy": 1, 
-        "Tralalero-3500": 1,
-        "Tralalero-7000": 1,
-        "Tralalero-1500": 1,
-        "Medussi-4000": 1,
-        "Medussi-8000": 1,
-        "Guerrero-Digitale": 1,
-        "Combinasionas-6000": 1,
-        "Combinasionas-5000": 1,
-        "JobSahur-3500": 1,
-        "Vacca-Saturno-3000": 1,
-        "Vacca-Saturno-5500": 7,
-        "Tractoro-Dinosauro-3500": 1,
-        "Tractoro-Dinosauro-2500": 1,
-        "Gattito-Tocoto-2500": 1,
-        "Crabbo-Limonetta": 1,
-        "nohay": 0
-    };
-
-
     const root = document.documentElement;
     const cartKey = 'cart';
     let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
@@ -225,196 +198,70 @@ document.addEventListener('DOMContentLoaded', () => {
                 cartModal.style.display = 'none';
             });
         }
+
         const paymentCloseBtn = document.querySelector('.payment-close-btn');
         if (paymentCloseBtn && paymentModal) {
             paymentCloseBtn.addEventListener('click', () => {
                 paymentModal.style.display = 'none';
             });
         }
-        window.addEventListener('click', (event) => {
-            if (event.target === cartModal) {
+
+        window.addEventListener('click', (e) => {
+            if (e.target === cartModal) {
                 cartModal.style.display = 'none';
             }
-            if (event.target === paymentModal) {
+            if (e.target === paymentModal) {
                 paymentModal.style.display = 'none';
             }
         });
     };
 
-    const setupBuyNowListeners = () => {
-        document.querySelectorAll('.buy-now-btn').forEach(button => {
-            if (button.disabled) return;
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const productName = button.dataset.productName;
-                const price = parseFloat(button.dataset.price);
-                const productId = button.closest('.product-card, .carousel-slide').dataset.productId;
-                const image = button.closest('.package-card, .carousel-slide').querySelector('img').src;
+    const productStock = {
+        'Vaquitas-Saturnitas-5500': 1,
+        'Extinct-Grande-7000': 1,
+        'Extinct-Grande-12000': 1,
 
-                cart = [];
-
-                const product = {
-                    id: productId,
-                    name: productName,
-                    price: price,
-                    image: image
-                };
-
-                const added = addToCart(product);
-                if (added) {
-                    renderCartItems();
-                    cartModal.style.display = 'none';
-
-                    const selectedProductNameElement = document.getElementById('selected-product-name');
-                    if (selectedProductNameElement) {
-                        const productSummary = cart.map(item =>
-                            `${item.name} (x${item.quantity})`
-                        ).join('<br>');
-
-                        const totalPagar = document.getElementById('cart-total').textContent;
-                        selectedProductNameElement.innerHTML = `
-                            <p>Total a Pagar: <strong>${totalPagar}</strong></p>
-                            <p>Artículos:</p>
-                            <div style="font-size: 0.9em; padding-left: 15px;">${productSummary}</div>
-                        `;
-                    }
-                    paymentModal.style.display = 'block';
-                }
-            });
-        });
+        'Hotspotsito': 7,
+        'Sammini': 1,
+        'Sammini2': 1,
+        'Tralalero-3500': 1,
+        'Tralalero-7000': 1,
+        'Medussi-4000': 1,
+        'Medussi-1000': 1,
+        'Digitale-3500': 1,
+        'Combinasionas-6000': 1,
+        'Combinasionas-5000': 1,
+        'JobSahur-3500': 1,
+        'Vacca-Saturno-1000': 1,
+        'Vacca-Saturno-3000': 1,
+        'Tractoro-Dinosauro-3500': 1,
+        'Tractoro-Dinosauro-2500': 1,
+        'Gattito-Tocoto-2500': 1,
+        'Beluga-2000': 1,
+        'Grabbo': 1,
+        'Vaquitas-Saturnitas-5500-G': 1,
+        'nohay': 0,
     };
 
-    const track = document.querySelector('.carousel-track');
-    const slides = document.querySelectorAll('.carousel-slide');
-    const nextButton = document.querySelector('.next-btn');
-    const prevButton = document.querySelector('.prev-btn');
-    const dotsNav = document.querySelector('.carousel-nav');
-
-    if (track && slides.length > 0) {
-        const slideWidth = slides[0].getBoundingClientRect().width;
-        let slideIndex = 0;
-
-        slides.forEach((slide, index) => {
-            slide.style.left = slideWidth * index + 'px';
-        });
-
-        const moveToSlide = (track, currentSlide, targetSlide) => {
-            track.style.transform = 'translateX(-' + targetSlide.style.left + ')';
-            currentSlide.classList.remove('current-slide');
-            targetSlide.classList.add('current-slide');
-            slideIndex = slides.findIndex(slide => slide === targetSlide);
-        };
-
-        const updateDots = (currentDot, targetDot) => {
-            if (currentDot) currentDot.classList.remove('current-slide');
-            if (targetDot) targetDot.classList.add('current-slide');
-        };
-
-        if (nextButton) {
-            nextButton.addEventListener('click', () => {
-                const currentSlide = track.querySelector('.current-slide') || slides[0];
-                const nextSlide = currentSlide.nextElementSibling || slides[0];
-                const currentDot = dotsNav.querySelector('.current-slide');
-                const nextDot = currentDot ? (currentDot.nextElementSibling || dotsNav.firstElementChild) : dotsNav.firstElementChild;
-
-                moveToSlide(track, currentSlide, nextSlide);
-                updateDots(currentDot, nextDot);
-            });
-        }
-
-        if (prevButton) {
-            prevButton.addEventListener('click', () => {
-                const currentSlide = track.querySelector('.current-slide') || slides[0];
-                const prevSlide = currentSlide.previousElementSibling || slides[slides.length - 1]; 
-                const currentDot = dotsNav.querySelector('.current-slide');
-                const prevDot = currentDot ? (currentDot.previousElementSibling || dotsNav.lastElementChild) : dotsNav.lastElementChild;
-
-                moveToSlide(track, currentSlide, prevSlide);
-                updateDots(currentDot, prevDot);
-            });
-        }
-
-        if (dotsNav) {
-            dotsNav.addEventListener('click', (e) => {
-                const targetDot = e.target.closest('button');
-                if (!targetDot || !dotsNav.contains(targetDot)) return;
-
-                const currentSlide = track.querySelector('.current-slide');
-                const currentDot = dotsNav.querySelector('.current-slide');
-                const targetIndex = Array.from(dotsNav.children).findIndex(dot => dot === targetDot);
-                const targetSlide = slides[targetIndex];
-
-                if (targetSlide) {
-                    moveToSlide(track, currentSlide, targetSlide);
-                    updateDots(currentDot, targetDot);
-                }
-            });
-        }
-    }
-
-    const itemsPerPage = 16;
-    let currentPage = 1;
-    let allItems = [];
-    const brainrotGrid = document.getElementById('brainrot-grid');
-    const paginationContainer = document.getElementById('pagination-container');
-
-    if (brainrotGrid) {
-        allItems = Array.from(brainrotGrid.children);
-        const totalItems = allItems.length;
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        const prevPageBtn = document.getElementById('prev-page-btn');
-        const nextPageBtn = document.getElementById('next-page-btn');
-        const pageInfoSpan = document.getElementById('page-info');
-
-        const displayPage = (page) => {
-            const start = (page - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-
-            allItems.forEach((item, index) => {
-                item.style.display = (index >= start && index < end) ? 'block' : 'none';
-            });
-
-            if (prevPageBtn) {
-                prevPageBtn.disabled = page === 1;
-            }
-            if (nextPageBtn) {
-                nextPageBtn.disabled = page === totalPages;
-            }
-            if (pageInfoSpan) {
-                pageInfoSpan.textContent = `Página ${page} de ${totalPages}`;
-            }
-        };
-
-        if (prevPageBtn) {
-            prevPageBtn.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    displayPage(currentPage);
-                }
-            });
-        }
-
-        if (nextPageBtn) {
-            nextPageBtn.addEventListener('click', () => {
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    displayPage(currentPage);
-                }
-            });
-        }
-    }
-
     const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-        const currentTheme = localStorage.getItem('theme') || 'dark';
-        root.setAttribute('data-theme', currentTheme);
-        themeToggle.querySelector('i').className = currentTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    const currentTheme = localStorage.getItem('theme') || 'light';
 
+    function setTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        if (theme === 'dark') {
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+    }
+
+    setTheme(currentTheme);
+
+    if (themeToggle) {
         themeToggle.addEventListener('click', () => {
             const newTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            root.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            themeToggle.querySelector('i').className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            setTheme(newTheme);
         });
     }
 
@@ -424,10 +271,12 @@ document.addEventListener('DOMContentLoaded', () => {
             preloader.classList.add('hidden');
         }, 1000);
     }
+
     const initializeStore = () => {
         document.querySelectorAll('.package-card, .carousel-slide').forEach(element => {
             const id = element.dataset.productId;
-            if (!id || productStock[id] === undefined) return; 
+
+            if (!id || productStock[id] === undefined) return;
 
             const stock = productStock[id];
             const isPackageCard = element.classList.contains('package-card');
@@ -468,58 +317,177 @@ document.addEventListener('DOMContentLoaded', () => {
                         button.innerHTML = '<i class="fas fa-cart-plus"></i> AGREGAR';
                     }
                 });
-                if (!isPackageCard) {
-                    const badge = element.querySelector('.brainrot-badge');
-                    if (badge) {
-                        element.classList.remove('out-of-stock-card');
-                    }
-                }
             }
         });
 
         document.querySelectorAll('.add-to-cart-btn, .buy-now-btn').forEach(button => {
             if (button.disabled) return;
-            button.addEventListener('click', (e) => {
-                if (button.classList.contains('add-to-cart-btn')) {
-                    e.preventDefault();
-                    const productName = button.dataset.productName;
-                    const price = parseFloat(button.dataset.price);
-                    const productId = button.closest('.product-card, .carousel-slide').dataset.productId;
-                    const image = button.closest('.package-card, .carousel-slide').querySelector('img').src;
 
-                    addToCart({
-                        id: productId,
-                        name: productName,
-                        price: price,
-                        image: image
-                    });
-                    button.classList.add('added');
-                    setTimeout(() => {
-                        button.classList.remove('added');
-                    }, 500);
+            button.addEventListener('click', (e) => {
+                const buttonData = e.currentTarget.dataset;
+                const parentElement = e.currentTarget.closest('[data-product-id]');
+                const id = parentElement ? parentElement.dataset.productId : null;
+
+                if (!id) {
+                    console.error("No se encontró el data-product-id para el botón.");
+                    return;
+                }
+
+                let imageSrc = buttonData.imgSrc;
+                if (!imageSrc) {
+                    const imageElement = parentElement.querySelector('img.zoomable-img') || parentElement.querySelector('.brainrot-image img');
+                    if (imageElement) {
+                        imageSrc = imageElement.src;
+                    }
+                }
+
+                const product = {
+                    id: id,
+                    name: buttonData.productName,
+                    price: parseInt(buttonData.price),
+                    image: imageSrc || '/src/assets/default_placeholder.png'
+                };
+
+                
+                if (e.currentTarget.classList.contains('buy-now-btn')) {
+                    const selectedProductNameElement = document.getElementById('selected-product-name');
+                    if (selectedProductNameElement && paymentModal) {
+                        
+                        const singleProductSummary = `${product.name} (x1)`;
+                        
+                        const totalPagar = formatPrice(product.price);
+
+                        selectedProductNameElement.innerHTML = `
+                            <p>Total a Pagar: <strong>${totalPagar}</strong></p>
+                            <p>Artículo:</p>
+                            <div style="font-size: 0.9em; padding-left: 15px;">${singleProductSummary}</div>
+                        `;
+
+                        if(cartModal) cartModal.style.display = 'none';
+                        paymentModal.style.display = 'block';
+
+                    } else {
+                        alert(`Iniciando compra de ${product.name} por ${formatPrice(product.price)}.`);
+                    }
+                } else {
+                    const success = addToCart(product); 
+                    if (success) {
+                        alert(`${product.name} ha sido añadido al carrito.`);
+                    }
                 }
             });
         });
     };
 
+    const revealElements = document.querySelectorAll('.package-card, .section-title');
+    const checkReveal = () => {
+        const triggerBottom = window.innerHeight * 0.85;
+        revealElements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            if (elementTop < triggerBottom) {
+                element.classList.add('reveal', 'active');
+            } else {
+                element.classList.remove('active');
+            }
+        });
+    };
+    window.addEventListener('scroll', checkReveal);
+    checkReveal();
+
+    const track = document.querySelector('.carousel-track');
+    const slides = Array.from(document.querySelectorAll('.carousel-slide'));
+    const nextButton = document.querySelector('.next-btn');
+    const prevButton = document.querySelector('.prev-btn');
+    const dotsNav = document.querySelector('.carousel-nav');
+
+    if (track) {
+        const slideWidth = slides[0].getBoundingClientRect().width;
+        let slideIndex = 0;
+
+        slides.forEach((slide, index) => {
+            slide.style.left = slideWidth * index + 'px';
+        });
+
+        const moveToSlide = (track, currentSlide, targetSlide) => {
+            track.style.transform = 'translateX(-' + targetSlide.style.left + ')';
+            currentSlide.classList.remove('current-slide');
+            targetSlide.classList.add('current-slide');
+            slideIndex = slides.findIndex(slide => slide === targetSlide);
+        };
+
+        const updateDots = (currentDot, targetDot) => {
+            currentDot.classList.remove('current-slide');
+            targetDot.classList.add('current-slide');
+        };
+
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                const currentSlide = track.querySelector('.current-slide') || slides[0];
+                const nextSlide = currentSlide.nextElementSibling || slides[0];
+                const currentDot = dotsNav.querySelector('.current-slide');
+                const nextDot = currentDot.nextElementSibling || dotsNav.firstElementChild;
+
+                moveToSlide(track, currentSlide, nextSlide);
+                updateDots(currentDot, nextDot);
+            });
+        }
+
+        if (prevButton) {
+            prevButton.addEventListener('click', () => {
+                const currentSlide = track.querySelector('.current-slide') || slides[0];
+                const prevSlide = currentSlide.previousElementSibling || slides[slides.length - 1];
+                const currentDot = dotsNav.querySelector('.current-slide');
+                const prevDot = currentDot.previousElementSibling || dotsNav.lastElementChild;
+
+                moveToSlide(track, currentSlide, prevSlide);
+                updateDots(currentDot, prevDot);
+            });
+        }
+
+        if (dotsNav) {
+            Array.from(dotsNav.children).forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    const targetDot = e.target;
+                    const targetIndex = Array.from(dotsNav.children).findIndex(child => child === targetDot);
+                    const targetSlide = slides[targetIndex];
+                    const currentSlide = track.querySelector('.current-slide');
+                    const currentDot = dotsNav.querySelector('.current-slide');
+
+                    moveToSlide(track, currentSlide, targetSlide);
+                    updateDots(currentDot, targetDot);
+                });
+            });
+        }
+
+        const adjustSlidePositions = () => {
+            const newSlideWidth = slides[0].getBoundingClientRect().width;
+            slides.forEach((slide, index) => {
+                slide.style.left = newSlideWidth * index + 'px';
+            });
+            const currentSlide = track.querySelector('.current-slide') || slides[0];
+            if (currentSlide) {
+                track.style.transform = 'translateX(-' + currentSlide.style.left + ')';
+            }
+        };
+
+        window.addEventListener('resize', adjustSlidePositions);
+    }
+
     const imageModal = document.getElementById('image-modal');
-    const fullImage = document.getElementById('full-image');
-    const imageCloseBtn = imageModal ? imageModal.querySelector('.modal-close-btn') : null;
+    const modalImg = document.getElementById('full-image');
+    const captionText = document.getElementById('caption');
+    const imgCloseBtn = imageModal ? imageModal.querySelector('.modal-close-btn') : null;
 
     document.querySelectorAll('.zoomable-img').forEach(img => {
-        img.addEventListener('click', (e) => {
-            if (imageModal && fullImage) {
-                fullImage.src = img.src;
-                imageModal.style.display = 'block';
-                const captionText = img.dataset.caption || img.alt;
-                const caption = document.getElementById('caption');
-                if (caption) caption.textContent = captionText;
-            }
+        img.addEventListener('click', function() {
+            imageModal.style.display = 'block';
+            modalImg.src = this.src;
+            captionText.innerHTML = this.dataset.caption || this.alt;
         });
     });
 
-    if (imageCloseBtn) {
-        imageCloseBtn.addEventListener('click', () => {
+    if (imgCloseBtn) {
+        imgCloseBtn.addEventListener('click', () => {
             imageModal.style.display = 'none';
         });
     }
@@ -531,6 +499,64 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+
+    const brainrotGrid = document.querySelector('.package-grid');
+    if (brainrotGrid) {
+        const items = Array.from(brainrotGrid.querySelectorAll('.package-card'));
+        let currentPage = 1;
+        const itemsPerPage = 6;
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const pageInfoSpan = document.getElementById('page-info');
+
+        function displayPage(page) {
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+
+            items.forEach((item, index) => {
+                item.style.display = (index >= startIndex && index < endIndex) ? 'block' : 'none';
+            });
+
+            if (prevPageBtn) {
+                prevPageBtn.disabled = page === 1;
+            }
+            if (nextPageBtn) {
+                nextPageBtn.disabled = page === totalPages;
+            }
+            if (pageInfoSpan) {
+                pageInfoSpan.textContent = `Página ${page} de ${totalPages}`;
+            }
+
+            checkReveal();
+        }
+
+        if (items.length > 0) {
+            displayPage(currentPage);
+        }
+        
+
+        if (prevPageBtn) {
+            prevPageBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayPage(currentPage);
+                }
+            });
+        }
+
+        if (nextPageBtn) {
+            nextPageBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayPage(currentPage);
+                }
+            });
+        }
+    }
+
     const navToggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
 
@@ -557,8 +583,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initializeStore();
     setupCartListeners();
-    setupBuyNowListeners();
     updateCartCount();
-    if (brainrotGrid) displayPage(currentPage);
 
 });
