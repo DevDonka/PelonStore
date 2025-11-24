@@ -221,11 +221,11 @@ document.addEventListener('DOMContentLoaded', () => {
         'Extinct-Grande-7000': 1,
         'Extinct-Grande-12000': 1,
 
-        'Hotspotsito': 1,
+        'Hotspotsito': 7,
         'Sammini': 1,
         'Sammini2': 1,
         'Tralalero-3500': 1,
-        'Tralalero-7000': 1,
+        'Tralalero-1500': 1,
         'Medussi-4000': 1,
         'Medussi-1000': 1,
         'Digitale-3500': 1,
@@ -584,6 +584,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeStore();
     setupCartListeners();
     updateCartCount();
-
 
 });
