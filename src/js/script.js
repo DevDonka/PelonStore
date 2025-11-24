@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Extinct-Grande-7000': 1,
         'Extinct-Grande-12000': 1,
 
-        'Hotspotsito': 7,
+        'Hotspotsito': 1,
         'Sammini': 1,
         'Sammini2': 1,
         'Tralalero-3500': 1,
@@ -584,5 +584,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeStore();
     setupCartListeners();
     updateCartCount();
+
 
 });
